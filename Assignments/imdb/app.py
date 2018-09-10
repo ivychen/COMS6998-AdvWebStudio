@@ -43,9 +43,6 @@ def save():
         # data = request.args
         # data = request.get_json(force=True)
 
-        print("Creating new movie")
-        print(request.form)
-
         cast = list(request.form['cast'].split('\n'))
         movies.addMovie(title=request.form['title'], year=request.form['year'], desc=request.form['description'], cast=cast)
         # db.session.add(newMovie)
@@ -55,6 +52,13 @@ def save():
 
     return redirect('/addMovie')
 
+@app.route('/deleteMovie', methods=['POST', 'GET'])
+def delete():
+    if request.method == 'POST':
+        id = request.form['id']
+        movies.deleteMovie(id)
+
+    return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=True)

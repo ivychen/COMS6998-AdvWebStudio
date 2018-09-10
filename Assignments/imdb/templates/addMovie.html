@@ -4,7 +4,7 @@
 {% block body %}
   {% block content %}
     <div>
-      <h2>Add Movie</h2>
+      <h1 class="page-header">Add Movie</h1>
 
       <form action="/saveMovie" method="POST">
         <div class="form-group">
@@ -17,11 +17,11 @@
         </div>
         <div class="form-group">
           <label for="description">Description</label>
-          <textarea name="description" class="form-control" id="description" rows="3">Movie description</textarea>
+          <textarea name="description" class="form-control" id="description" rows="3" placeholder="Movie description"></textarea>
         </div>
         <div class="form-group">
           <label for="cast">Cast</label>
-          <textarea name="cast" class="form-control" id="cast" rows="3">Cast</textarea>
+          <textarea name="cast" class="form-control" id="cast" rows="3" placeholder="Cast"></textarea>
           <small id="emailHelp" class="form-text text-muted">Please enter one cast member per line.</small>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

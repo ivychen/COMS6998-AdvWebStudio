@@ -42,6 +42,10 @@ class Movies():
         self.dic[m.id] = m
         self.saveData(self.filename)
 
-    def removeMovie(self, id):
-        del self.dic[id]
-        self.saveData(self.filename)
+    def deleteMovie(self, id):
+        if id in self.dic:
+            del self.dic[id]
+            self.saveData(self.filename)
+            return id
+        else:
+            return None
