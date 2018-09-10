@@ -1,5 +1,7 @@
 # COMS6998 Advanced Web Studio | Fall 2018
 
+Prof. Lydia Chilton
+
 ## Assignments
 1. Rebuild IMDB
 2. Rebuild Twitter
