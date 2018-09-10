@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %} IMDB {% endblock %}
+
+{% block body %}
+
+  {% block content %}
+  <div class="row">
+    <h1>Welcome to IMDB.</h1>
+  </div>
+  <div class="row">
+    <h2>Movies</h2>
+  </div>
+  <div class="row card-grid">
+    {% for m in movies %}
+    <div class="card" style="width: 18rem;">
+      <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+      <div class="card-header">
+        <h5 class="card-title">{{ m.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ m.year }}</h6>
+      </div>
+      <div class="card-body">
+        <p class="card-text">{{ m.desc }}</p>
+        <a href="/movie/{{ m.id }}" class="btn btn-primary">MORE INFO</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endblock %}
+
+{% endblock %}
