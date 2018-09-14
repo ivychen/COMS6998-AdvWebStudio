@@ -3,30 +3,29 @@ from flask import Flask, g, render_template, request, jsonify, url_for, redirect
 from flask_bootstrap import Bootstrap
 import uuid
 import pickle
-from data import Movies
+from flask_sqlalchemy import SQLAlchemy
 
-def createApp():
-    app = Flask(__name__)
-    Bootstrap(app)
-    return app
-    # app.register_blueprint(test_api)
+# Custom app modules
+from config import Config
 
-app = createApp()
-movies = Movies('movies.pkl')
+# === APP CONFIGURATION ===
+app = Flask(__name__)
+app.config.from_object(Config)
+Bootstrap(app)
+db = SQLAlchemy(app)
+import models
+# app.register_blueprint(test_api)
 # movies.addMovie('Crazy Rich Asians', '2018', 'This contemporary romantic comedy, based on a global bestseller, follows native New Yorker Rachel Chu to Singapore to meet her boyfriend\'s family.', ['Constance Wu', 'Henry Golding', 'Michelle Yeoh', 'Awkwafina', 'Gemma Chan'])
 
 # Define routes
 @app.route('/')
 def main():
-    # m = Movie.query.all()
-    m = movies.dic.values()
+    m = models.Movie.query.all()
     return render_template('main.html', movies=m)
 
 @app.route('/movie/<id>', methods=['GET'])
 def movie(id):
-    # movie_data = Movie.query.get(id)
-    movie_data = movies.dic[id]
-    print(movie_data)
+    movie_data = models.Movie.query.get(id)
     return render_template('movie.html', movie_data=movie_data)
 
 @app.route('/addMovie', methods=['POST', 'GET'])

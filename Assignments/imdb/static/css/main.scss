@@ -13,7 +13,8 @@
   flex-wrap:  wrap;
 
   .card {
-    margin-right: auto;
+    width: 20rem !important ;
+    margin-right: 0;
     margin-bottom: 1rem;
   }
 }
@@ -31,4 +32,8 @@ body > .container {
 
 .movie {
   margin-bottom: 2rem;
+}
+
+.upper {
+  text-transform: uppercase;
 }

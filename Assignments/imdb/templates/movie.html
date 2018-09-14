@@ -4,16 +4,18 @@
 {% block body %}
   {% block content %}
     <div class="movie">
-      <h6 class="mb-2 text-muted">{{ movie_data.year }}</h6>
+      <h6 class="mb-2 text-muted">{{ movie_data.year }} | <span class="upper">{{ movie_data.genre }}</span> </h6>
       <h2>{{ movie_data.title }}</h2>
-      <p>{{ movie_data.desc }}</p>
+      <p>RUNTIME: {{ movie_data.runtime }} MINUTES</p>
+      <p>{{ movie_data.overview }}</p>
+
 
       <h4>Cast</h4>
-      <ul class="list-group">
+      <!-- <ul class="list-group">
         {% for actor in movie_data.cast %}
         <li class="list-group-item">{{ actor }}</li>
         {% endfor %}
-      </ul>
+      </ul> -->
     </div>
     <form action="/deleteMovie" method="POST">
       <div class="form-group" hidden>
