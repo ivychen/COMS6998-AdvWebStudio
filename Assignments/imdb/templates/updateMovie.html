@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %} IMDB {% endblock %}
+
+{% block body %}
+  {% block content %}
+    <div>
+      <h1 class="page-header">Update Movie</h1>
+
+      <form action="/saveMovie" method="POST">
+        <div class="form-group" hidden>
+          <label for="id">ID</label>
+          <input type="text" name="id" class="form-control-plaintext" id="id" aria-describedby="idHelp" value="{{ m.id }}" readonly>
+        </div>
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" name="title" class="form-control" id="title" aria-describedby="titleHelp" placeholder="{{ m.title }}" value="{{ m.title }}">
+        </div>
+        <div class="form-group">
+          <label for="year">Year</label>
+          <input type="text" name="year" class="form-control" id="year" placeholder="{{ m.year }}" value="{{ m.year }}">
+        </div>
+        <div class="form-group">
+          <label for="genre">Genre</label>
+          <input type="text" name="genre" class="form-control" id="genre" placeholder="{{ m.genre }}" value="{{ m.genre }}">
+          <small id="emailHelp" class="form-text text-muted">For multiple genres, enter each with a space between genres. Eg: "comedy drama romance"</small>
+        </div>
+        <div class="form-group">
+          <label for="runtime">Runtime</label>
+          <input type="text" name="runtime" class="form-control" id="runtime" placeholder="{{ m.runtime }} minutes" value="{{ m.runtime }}">
+        </div>
+        <div class="form-group">
+          <label for="overview">Synopsis</label>
+          <textarea name="overview" class="form-control" id="overview" rows="3" placeholder="{{ m.overview }}" value="{{ m.overview }}"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="cast">Cast</label>
+          <textarea name="cast" class="form-control" id="cast" rows="3" value="{{ castDefault }}">
+{% for c in cast %}{{ c.name }},{{ c.role}}{% endfor %}
+          </textarea>
+          <small id="emailHelp" class="form-text text-muted">Please enter one cast member,role pair per line. Eg: "Keira Knightley,Joan Clark"</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+
+    </div>
+  {% endblock %}
+{% endblock %}

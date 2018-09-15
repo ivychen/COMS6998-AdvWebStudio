@@ -21,8 +21,10 @@ class Movie(db.Model):
 
 class Talent(db.Model):
     tid = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(140), nullable=False)
+    name = db.Column(db.String(140), nullable=False, unique=True)
     # movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
 
     def __repr__(self):
         return '<Talent {}>'.format(self.name)
+
+# https://stackoverflow.com/questions/38654624/flask-sqlalchemy-many-to-many-relationship-new-attribute

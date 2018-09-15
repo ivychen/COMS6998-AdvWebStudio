@@ -17,6 +17,8 @@
         {% endfor %}
       </ul>
     </div>
+    <a href="/updateMovie/{{ movie_data.id }}" class="btn btn-primary">Update</a>
+
     <form action="/deleteMovie" method="POST">
       <div class="form-group" hidden>
         <label for="id">ID</label>

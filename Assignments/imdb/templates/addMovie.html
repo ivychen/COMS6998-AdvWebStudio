@@ -6,7 +6,7 @@
     <div>
       <h1 class="page-header">Add Movie</h1>
 
-      <form action="/saveMovie" method="POST">
+      <form action="/addMovie" method="POST">
         <div class="form-group">
           <label for="title">Title</label>
           <input type="text" name="title" class="form-control" id="title" aria-describedby="titleHelp" placeholder="Enter movie title">
@@ -16,13 +16,22 @@
           <input type="text" name="year" class="form-control" id="year" placeholder="Movie release year">
         </div>
         <div class="form-group">
-          <label for="description">Description</label>
-          <textarea name="description" class="form-control" id="description" rows="3" placeholder="Movie description"></textarea>
+          <label for="genre">Genre</label>
+          <input type="text" name="genre" class="form-control" id="genre" placeholder="Movie genre">
+          <small id="emailHelp" class="form-text text-muted">For multiple genres, enter each with a space between genres. Eg: "comedy drama romance"</small>
+        </div>
+        <div class="form-group">
+          <label for="runtime">Runtime</label>
+          <input type="text" name="runtime" class="form-control" id="runtime" placeholder="Runtime (in minutes)">
+        </div>
+        <div class="form-group">
+          <label for="overview">Synopsis</label>
+          <textarea name="overview" class="form-control" id="overview" rows="3" placeholder="Movie overview"></textarea>
         </div>
         <div class="form-group">
           <label for="cast">Cast</label>
-          <textarea name="cast" class="form-control" id="cast" rows="3" placeholder="Cast"></textarea>
-          <small id="emailHelp" class="form-text text-muted">Please enter one cast member per line.</small>
+          <textarea name="cast" class="form-control" id="cast" rows="3" placeholder="Cast members"></textarea>
+          <small id="emailHelp" class="form-text text-muted">Please enter one cast member,role pair per line. Eg: "Keira Knightley,Joan Clark"</small>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>

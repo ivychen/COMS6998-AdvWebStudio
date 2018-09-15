@@ -42,20 +42,73 @@ def cast(id):
 
 @app.route('/addMovie', methods=['POST', 'GET'])
 def addMovie():
+    if request.method == 'POST':
+        title = request.form['title']
+        year = request.form['year']
+        genre = request.form['genre']
+        runtime = request.form['runtime']
+        overview = request.form['overview']
+        castList = list(request.form['cast'].split('\n'))
+        cast = [tuple(c.split(',')) for c in castList]
+        print(cast)
+
+        # Add movie to db
+        m = models.Movie(title=title, year=year, genre=genre, runtime=runtime, overview=overview)
+        db.session.add(m)
+        db.session.commit()
+        db.session.refresh(m)
+
+        # Add any new cast members with their roles only if new name
+        for name,role in cast:
+            t = models.Talent(name=name)
+            # Check if the actor already exists
+            exists = models.Talent.query.filter_by(name=name).first()
+            if not exists:
+                db.session.add(t)
+                db.session.commit()
+                db.session.refresh(t)
+                statement = models.stars.insert().values(movieId=m.id, talentId=t.tid, role=role)
+            else:
+                statement = models.stars.insert().values(movieId=m.id, talentId=exists.tid, role=role)
+
+            db.session.execute(statement)
+            db.session.commit()
+
+        return redirect('/movie/' + str(m.id))
+
     return render_template('addMovie.html')
+
+@app.route('/updateMovie/<id>', methods=['POST', 'GET'])
+def updateMovie(id):
+    movie_data = models.Movie.query.get(id)
+    cast = db.session.query(models.Talent.name, models.stars)\
+        .join(models.stars)\
+        .filter_by(movieId=movie_data.id).all()
+
+    castDefault = ""
+    for c in cast:
+        castDefault = castDefault + str(c.name + "," + c.role) + "\n"
+
+    return render_template('updateMovie.html', m=movie_data, cast=cast, castDefault=castDefault)
 
 @app.route('/saveMovie', methods=['POST', 'GET'])
 def save():
-    send_back = {
-        'status': 'failed'
-    }
+    # send_back = {
+    #     'status': 'failed'
+    # }
 
     if request.method == 'POST':
         # data = request.args
         # data = request.get_json(force=True)
-
-        cast = list(request.form['cast'].split('\n'))
-        movies.addMovie(title=request.form['title'], year=request.form['year'], desc=request.form['description'], cast=cast)
+        m = request.form['id']
+        title = request.form['title']
+        year = request.form['year']
+        genre = request.form['genre']
+        runtime = request.form['runtime']
+        overview = request.form['overview']
+        castList = list(request.form['cast'].split('\n'))
+        cast = [tuple(c.split(',')) for c in castList]
+        print(cast)
         # db.session.add(newMovie)
         # db.session.commit()
 
