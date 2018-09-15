@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %} IMDB {% endblock %}
+
+{% block body %}
+  {% block content %}
+    <div class="cast">
+      <h2>{{ cast.name }}</h2>
+
+      <h4>Filmography:</h4>
+      <ul class="list-group">
+        {% for m in movies %}
+        <li class="list-group-item">{{ m.role }} in <a href="/movie/{{ m.movieId }}">{{ m.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endblock %}
+{% endblock %}

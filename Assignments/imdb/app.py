@@ -26,10 +26,19 @@ def main():
 def movie(id):
     movie_data = models.Movie.query.get(id)
     cast = db.session.query(models.Talent.name, models.stars)\
-    .join(models.stars)\
-    .filter_by(movieId=movie_data.id).all()
+        .join(models.stars)\
+        .filter_by(movieId=movie_data.id).all()
 
     return render_template('movie.html', movie_data=movie_data, cast=cast)
+
+@app.route('/cast/<id>', methods=['GET'])
+def cast(id):
+    cast_data = models.Talent.query.get(id)
+    m = db.session.query(models.Movie.title, models.stars)\
+        .join(models.stars)\
+        .filter_by(talentId=cast_data.tid).all()
+
+    return render_template('cast.html', cast=cast_data, movies=m)
 
 @app.route('/addMovie', methods=['POST', 'GET'])
 def addMovie():
