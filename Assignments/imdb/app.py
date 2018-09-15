@@ -67,7 +67,8 @@ def save():
 def delete():
     if request.method == 'POST':
         id = request.form['id']
-        movies.deleteMovie(id)
+        db.session.query(models.Movie).filter_by(id=id).delete()
+        db.session.commit()
 
     return redirect('/')
 

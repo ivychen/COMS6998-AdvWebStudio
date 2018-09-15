@@ -17,3 +17,13 @@ NO:
 - db
 - images
 - graphic design
+
+### Week 2
+
+Adding more functionality to IMDB.
+
+Requirements:
+- Store data in SQLite database (hipp hipp hooray)
+- Query with SQLAlchemy
+- Enables CRUD
+- Uses at least one “join” operation

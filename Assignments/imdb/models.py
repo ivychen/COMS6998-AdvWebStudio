@@ -1,6 +1,3 @@
-import os
-import pickle
-import uuid
 from app import db
 
 stars = db.Table(
