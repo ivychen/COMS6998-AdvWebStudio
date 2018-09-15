@@ -2,8 +2,8 @@ from app import db
 
 stars = db.Table(
                 'stars',
-                db.Column('movieId', db.Integer, db.ForeignKey('movie.id'), primary_key=True),
-                db.Column('talentId', db.Integer, db.ForeignKey('talent.tid'), primary_key=True),
+                db.Column('movieId', db.Integer, db.ForeignKey('movie.id', ondelete="CASCADE"), primary_key=True),
+                db.Column('talentId', db.Integer, db.ForeignKey('talent.tid', ondelete="CASCADE"), primary_key=True),
                 db.Column('role', db.String(140), nullable=False)
                 )
 
@@ -14,7 +14,7 @@ class Movie(db.Model):
     genre = db.Column(db.String(140), nullable=False)
     runtime = db.Column(db.Integer)
     overview = db.Column(db.Text)
-    talent = db.relationship('Talent', secondary=stars, backref=db.backref('movie', lazy=True), lazy='subquery')
+    talent = db.relationship('Talent', secondary=stars, backref=db.backref('movie', cascade='all', lazy=True), lazy='subquery')
 
     def __repr__(self):
         return '<Movie {}, {}, {}>'.format(self.title, self.year, self.overview)

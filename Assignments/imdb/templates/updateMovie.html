@@ -30,13 +30,11 @@
         </div>
         <div class="form-group">
           <label for="overview">Synopsis</label>
-          <textarea name="overview" class="form-control" id="overview" rows="3" placeholder="{{ m.overview }}" value="{{ m.overview }}"></textarea>
+          <textarea name="overview" class="form-control" id="overview" rows="3" placeholder="{{ m.overview }}" value="{{ m.overview }}">{{ m.overview }}</textarea>
         </div>
         <div class="form-group">
           <label for="cast">Cast</label>
-          <textarea name="cast" class="form-control" id="cast" rows="3" value="{{ castDefault }}">
-{% for c in cast %}{{ c.name }},{{ c.role}}{% endfor %}
-          </textarea>
+          <textarea name="cast" class="form-control" id="cast" rows="3" value="{{ castDefault }}">{% for c in cast %}{{ c.name }},{{ c.role}}{% endfor %}</textarea>
           <small id="emailHelp" class="form-text text-muted">Please enter one cast member,role pair per line. Eg: "Keira Knightley,Joan Clark"</small>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

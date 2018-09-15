@@ -28,6 +28,7 @@ def movie(id):
     cast = db.session.query(models.Talent.name, models.stars)\
         .join(models.stars)\
         .filter_by(movieId=movie_data.id).all()
+    db.session.commit()
 
     return render_template('movie.html', movie_data=movie_data, cast=cast)
 
@@ -44,13 +45,12 @@ def cast(id):
 def addMovie():
     if request.method == 'POST':
         title = request.form['title']
-        year = request.form['year']
+        year = int(request.form['year'])
         genre = request.form['genre']
-        runtime = request.form['runtime']
+        runtime = int(request.form['runtime'])
         overview = request.form['overview']
         castList = list(request.form['cast'].split('\n'))
         cast = [tuple(c.split(',')) for c in castList]
-        print(cast)
 
         # Add movie to db
         m = models.Movie(title=title, year=year, genre=genre, runtime=runtime, overview=overview)
@@ -84,6 +84,7 @@ def updateMovie(id):
     cast = db.session.query(models.Talent.name, models.stars)\
         .join(models.stars)\
         .filter_by(movieId=movie_data.id).all()
+    db.session.commit()
 
     castDefault = ""
     for c in cast:
@@ -100,21 +101,46 @@ def save():
     if request.method == 'POST':
         # data = request.args
         # data = request.get_json(force=True)
-        m = request.form['id']
-        title = request.form['title']
-        year = request.form['year']
-        genre = request.form['genre']
-        runtime = request.form['runtime']
-        overview = request.form['overview']
+        id = request.form['id']
+
+        # Remove all stars in relationships that aren't in the updated cast list
+        delCast = models.stars.delete(models.stars.c.movieId == id)
+        db.session.execute(delCast)
+        db.session.commit()
+
+        m = db.session.query(models.Movie).filter_by(id=id).first()
+        m.title = request.form['title']
+        m.year = int(request.form['year'])
+        m.genre = request.form['genre']
+        m.runtime = int(request.form['runtime'])
+        m.overview = request.form['overview']
+        db.session.commit()
+
         castList = list(request.form['cast'].split('\n'))
         cast = [tuple(c.split(',')) for c in castList]
-        print(cast)
+
+        for name,role in cast:
+            # Check if the actor already exists
+            exists = models.Talent.query.filter_by(name=name).first()
+            if not exists:
+                t = models.Talent(name=name)
+                db.session.add(t)
+                db.session.commit()
+                db.session.refresh(t)
+                statement = models.stars.insert().values(movieId=id, talentId=t.tid, role=role)
+            else:
+                statement = models.stars.insert().values(movieId=id, talentId=exists.tid, role=role)
+
+            db.session.execute(statement)
+            db.session.commit()
+
         # db.session.add(newMovie)
         # db.session.commit()
+        # send_back['status'] = 'success'
 
-        send_back['status'] = 'success'
+        return redirect('/movie/' + str(id))
 
-    return redirect('/addMovie')
+    return render_template('/')
 
 @app.route('/deleteMovie', methods=['POST', 'GET'])
 def delete():
