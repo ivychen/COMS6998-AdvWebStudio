@@ -28,4 +28,4 @@ class Talent(db.Model):
     # movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
 
     def __repr__(self):
-        return '<Talent {}'.format(self.name)
+        return '<Talent {}>'.format(self.name)

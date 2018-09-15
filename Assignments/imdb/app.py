@@ -15,7 +15,6 @@ Bootstrap(app)
 db = SQLAlchemy(app)
 import models
 # app.register_blueprint(test_api)
-# movies.addMovie('Crazy Rich Asians', '2018', 'This contemporary romantic comedy, based on a global bestseller, follows native New Yorker Rachel Chu to Singapore to meet her boyfriend\'s family.', ['Constance Wu', 'Henry Golding', 'Michelle Yeoh', 'Awkwafina', 'Gemma Chan'])
 
 # Define routes
 @app.route('/')
@@ -26,7 +25,11 @@ def main():
 @app.route('/movie/<id>', methods=['GET'])
 def movie(id):
     movie_data = models.Movie.query.get(id)
-    return render_template('movie.html', movie_data=movie_data)
+    cast = db.session.query(models.Talent.name, models.stars)\
+    .join(models.stars)\
+    .filter_by(movieId=movie_data.id).all()
+
+    return render_template('movie.html', movie_data=movie_data, cast=cast)
 
 @app.route('/addMovie', methods=['POST', 'GET'])
 def addMovie():

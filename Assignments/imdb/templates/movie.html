@@ -11,11 +11,11 @@
 
 
       <h4>Cast</h4>
-      <!-- <ul class="list-group">
-        {% for actor in movie_data.cast %}
-        <li class="list-group-item">{{ actor }}</li>
+      <ul class="list-group">
+        {% for c in cast %}
+        <li class="list-group-item"><a href="/cast/{{ c.talentId }}">{{ c.name }}</a> as {{ c.role }}</li>
         {% endfor %}
-      </ul> -->
+      </ul>
     </div>
     <form action="/deleteMovie" method="POST">
       <div class="form-group" hidden>
