@@ -60,10 +60,11 @@ def addMovie():
 
         # Add any new cast members with their roles only if new name
         for name,role in cast:
-            t = models.Talent(name=name)
             # Check if the actor already exists
             exists = models.Talent.query.filter_by(name=name).first()
+
             if not exists:
+                t = models.Talent(name=name)
                 db.session.add(t)
                 db.session.commit()
                 db.session.refresh(t)
@@ -94,10 +95,6 @@ def updateMovie(id):
 
 @app.route('/saveMovie', methods=['POST', 'GET'])
 def save():
-    # send_back = {
-    #     'status': 'failed'
-    # }
-
     if request.method == 'POST':
         # data = request.args
         # data = request.get_json(force=True)
@@ -133,10 +130,6 @@ def save():
 
             db.session.execute(statement)
             db.session.commit()
-
-        # db.session.add(newMovie)
-        # db.session.commit()
-        # send_back['status'] = 'success'
 
         return redirect('/movie/' + str(id))
 
