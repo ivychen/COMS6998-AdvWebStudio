@@ -1,8 +1,7 @@
 from flask import Flask, g, render_template, request, jsonify, url_for, redirect, Response
 # from TestAPI import test_api
 from flask_bootstrap import Bootstrap
-import uuid
-import pickle
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 # Custom app modules
@@ -33,9 +32,16 @@ def movie(id):
         .filter_by(movieId=movie_data.id).all()
     db.session.commit()
 
-    print("GENRE", genre)
+    releaseDate = datetime.strftime(movie_data.releaseDate, "%B %d, %Y")
 
-    return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre)
+    if movie_data.budget and movie_data.boxOfficeOpeningWeekend and movie_data.boxOfficeGross:
+        budget = "{0:,.2f}".format(movie_data.budget)
+        boxOfficeOpeningWeekend = "{0:,.2f}".format(movie_data.boxOfficeOpeningWeekend)
+        boxOfficeGross = "{0:,.2f}".format(movie_data.boxOfficeGross)
+
+        return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre, releaseDate=releaseDate, budget=budget, boxOfficeOpeningWeekend=boxOfficeOpeningWeekend, boxOfficeGross=boxOfficeGross)
+
+    return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre, releaseDate=releaseDate)
 
 @app.route('/cast/<id>', methods=['GET'])
 def cast(id):

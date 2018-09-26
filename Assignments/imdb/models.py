@@ -37,11 +37,11 @@ class Movie(db.Model):
     releaseDate = db.Column(db.DateTime)
     countryOfOrigin = db.Column(db.Text)
     language = db.Column(db.String(70), default="English")
-    budget = db.Column(db.Numeric)
-    boxOfficeGross = db.Column(db.Numeric)
-    boxOfficeOpeningWeekend = db.Column(db.Numeric)
-    isPlay = db.Column(db.Boolean, default=False)
-    isNovel = db.Column(db.Boolean, default=False)
+    budget = db.Column(db.Integer)
+    boxOfficeGross = db.Column(db.Integer)
+    boxOfficeOpeningWeekend = db.Column(db.Integer)
+    isPlay = db.Column(db.Boolean, unique=True, default=False)
+    isNovel = db.Column(db.Boolean, unique=True, default=False)
 
     # Relationships
     talent = db.relationship('Talent', secondary=stars, backref=db.backref('movie', cascade='all', lazy=True), lazy='subquery')
@@ -73,4 +73,5 @@ class Award(db.Model):
 
     def __repr__(self):
         return "<Award {} {} {}".format(self.event, self.award, self.year)
+        
 # https://stackoverflow.com/questions/38654624/flask-sqlalchemy-many-to-many-relationship-new-attribute
