@@ -35,9 +35,12 @@ def movie(id):
 @app.route('/cast/<id>', methods=['GET'])
 def cast(id):
     cast_data = models.Talent.query.get(id)
-    m = db.session.query(models.Movie.title, models.stars)\
+    m = db.session.query(models.Movie.title, models.Movie.year, models.stars)\
         .join(models.stars)\
-        .filter_by(talentId=cast_data.tid).all()
+        .filter_by(talentId=cast_data.tid)\
+        .order_by(models.Movie.year.desc()).all()
+
+    print(m)
 
     return render_template('cast.html', cast=cast_data, movies=m)
 

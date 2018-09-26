@@ -9,7 +9,7 @@
       <h4>Filmography:</h4>
       <ul class="list-group">
         {% for m in movies %}
-        <li class="list-group-item">{{ m.role }} in <a href="/movie/{{ m.movieId }}">{{ m.title }}</a></li>
+        <li class="list-group-item">{{ m.role }} in <a href="/movie/{{ m.movieId }}">{{ m.title }} ({{ m.year }})</a></li>
         {% endfor %}
       </ul>
     </div>
