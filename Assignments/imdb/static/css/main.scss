@@ -1,4 +1,5 @@
 .footer {
+  background-color: rgb(33, 41, 44) !important;
   position: relative;
   bottom: 0;
   width: 100%;
@@ -11,9 +12,14 @@
   display:  flex;
   justify-content: space-between;
   flex-wrap:  wrap;
+  padding: 2rem 0 2rem 0;
+  background: rgb(33, 41, 44);
 
   .card {
-    width: 20rem !important ;
+    border: none;
+    border-radius: .125rem;
+    background-color: transparent;
+    width: 16rem !important ;
     margin-right: 0;
     margin-bottom: 1rem;
   }
@@ -24,11 +30,27 @@
   margin-bottom: 1rem;
 }
 
+body {
+  background: rgb(33, 41, 44);
+  color: white !important;
+}
+
 body > .container {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
 
+nav.navbar.navbar-expand-lg {
+  background-color: rgb(33, 41, 44) !important;
+
+  .navbar-brand {
+    font-weight: bold;
+  }
+
+  a, li {
+    color: white !important;
+  }
+}
 
 .movie {
   margin-bottom: 2rem;

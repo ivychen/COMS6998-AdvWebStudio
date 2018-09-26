@@ -25,12 +25,17 @@ def main():
 @app.route('/movie/<id>', methods=['GET'])
 def movie(id):
     movie_data = models.Movie.query.get(id)
+    genre = db.session.query(models.Genre.category)\
+        .join(models.movieIsGenre)\
+        .filter_by(movieId=movie_data.id).all()
     cast = db.session.query(models.Talent.name, models.stars)\
         .join(models.stars)\
         .filter_by(movieId=movie_data.id).all()
     db.session.commit()
 
-    return render_template('movie.html', movie_data=movie_data, cast=cast)
+    print("GENRE", genre)
+
+    return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre)
 
 @app.route('/cast/<id>', methods=['GET'])
 def cast(id):

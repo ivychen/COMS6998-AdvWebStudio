@@ -31,7 +31,6 @@ class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140), nullable=False)
     year = db.Column(db.Integer, nullable=False)
-    genre = db.Column(db.String(140), nullable=False)
     runtime = db.Column(db.Integer)
     overview = db.Column(db.Text)
     posterURL = db.Column(db.Text)
@@ -40,7 +39,7 @@ class Movie(db.Model):
     language = db.Column(db.String(70), default="English")
     budget = db.Column(db.Numeric)
     boxOfficeGross = db.Column(db.Numeric)
-    boxOfficeOpening = db.Column(db.Numeric)
+    boxOfficeOpeningWeekend = db.Column(db.Numeric)
     isPlay = db.Column(db.Boolean, default=False)
     isNovel = db.Column(db.Boolean, default=False)
 
@@ -50,7 +49,7 @@ class Movie(db.Model):
     award = db.relationship('Award', secondary=movieWinsAward, backref=db.backref('movie', cascade='all', lazy=True), lazy='subquery')
 
     def __repr__(self):
-        return '<Movie {}, {}, {}>'.format(self.title, self.year, self.overview)
+        return '<Movie {}, {}>'.format(self.title, self.year)
 
 class Talent(db.Model):
     tid = db.Column(db.Integer, primary_key=True)
