@@ -96,6 +96,15 @@ def addMovie():
 @app.route('/updateMovie/<id>', methods=['POST', 'GET'])
 def updateMovie(id):
     movie_data = models.Movie.query.get(id)
+
+    genre = db.session.query(models.Genre.category)\
+        .join(models.movieIsGenre)\
+        .filter_by(movieId=movie_data.id).all()
+
+    genres = ",".join([g[0] for g in genre])
+
+    print(genres)
+
     cast = db.session.query(models.Talent.name, models.stars)\
         .join(models.stars)\
         .filter_by(movieId=movie_data.id).all()
@@ -105,7 +114,7 @@ def updateMovie(id):
     for c in cast:
         castDefault = castDefault + str(c.name + "," + c.role) + "\n"
 
-    return render_template('updateMovie.html', m=movie_data, cast=cast, castDefault=castDefault)
+    return render_template('updateMovie.html', m=movie_data, cast=cast, castDefault=castDefault, genres=genres)
 
 @app.route('/saveMovie', methods=['POST', 'GET'])
 def save():
@@ -119,14 +128,30 @@ def save():
         db.session.execute(delCast)
         db.session.commit()
 
+        # Update Movie information
         m = db.session.query(models.Movie).filter_by(id=id).first()
         m.title = request.form['title']
         m.year = int(request.form['year'])
-        m.genre = request.form['genre']
         m.runtime = int(request.form['runtime'])
+        m.posterURL = request.form['posterURL']
+        m.releaseDate = datetime.strptime(request.form['releaseDate'], "%Y-%m-%d %H:%M:%S")
+        m.countryOfOrigin = request.form['countryOfOrigin']
+        m.language = request.form['language']
+        m.budget = int(request.form['budget']) if request.form['budget'] else 0
+        m.boxOfficeOpeningWeekend = int(request.form['boxOfficeOpeningWeekend']) if request.form['boxOfficeOpeningWeekend'] else 0
+        m.boxOfficeGross = int(request.form['boxOfficeGross']) if request.form['boxOfficeGross'] else 0
         m.overview = request.form['overview']
+        if request.form.get('isPlay'):
+            m.isPlay = True
+        else:
+            m.isPlay = False
+        if request.form.get('isNovel'):
+            m.isNovel = True
+        else:
+            m.isNovel = False
         db.session.commit()
 
+        # Update cast list
         castList = list(request.form['cast'].split('\n'))
         cast = [tuple(c.split(',')) for c in castList]
 
@@ -141,6 +166,29 @@ def save():
                 statement = models.stars.insert().values(movieId=id, talentId=t.tid, role=role)
             else:
                 statement = models.stars.insert().values(movieId=id, talentId=exists.tid, role=role)
+
+            db.session.execute(statement)
+            db.session.commit()
+
+        # Update genre
+        genreList = list(request.form['genre'].split(','))
+        for g in genreList:
+            genreExists = models.Genre.query.filter_by(category=g).first()
+            movieGenreExists = db.session.query(models.movieIsGenre)\
+                .filter_by(movieId=id, category=g).first()
+
+            print("EXISTS", movieGenreExists)
+            if not genreExists:
+                tmp = models.Genre(category=g)
+                db.session.add(tmp)
+                db.session.commit()
+                db.session.refresh(tmp)
+                statement = models.movieIsGenre.insert().values(movieId=id, category=tmp.category)
+            else:
+                if not movieGenreExists:
+                    statement = models.movieIsGenre.insert().values(movieId=id, category=genreExists.category)
+                else:
+                    statement = ""
 
             db.session.execute(statement)
             db.session.commit()

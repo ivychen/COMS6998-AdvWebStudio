@@ -7,13 +7,13 @@
       <h1 class="page-header">Update Movie</h1>
 
       <form action="/saveMovie" method="POST">
-        <div class="form-group" hidden>
+        <div class="form-group" hidden readonly>
           <label for="id">ID</label>
           <input type="text" name="id" class="form-control-plaintext" id="id" aria-describedby="idHelp" value="{{ m.id }}" readonly>
         </div>
         <div class="form-group">
           <label for="title">Title</label>
-          <input type="text" name="title" class="form-control" id="title" aria-describedby="titleHelp" placeholder="{{ m.title }}" value="{{ m.title }}">
+          <input type="text" readonly name="title" class="form-control" id="title" aria-describedby="titleHelp" placeholder="{{ m.title }}" value="{{ m.title }}">
         </div>
         <div class="form-group">
           <label for="year">Year</label>
@@ -21,20 +21,73 @@
         </div>
         <div class="form-group">
           <label for="genre">Genre</label>
-          <input type="text" name="genre" class="form-control" id="genre" placeholder="{{ m.genre }}" value="{{ m.genre }}">
-          <small id="emailHelp" class="form-text text-muted">For multiple genres, enter each with a space between genres. Eg: "comedy drama romance"</small>
+          <input type="text" name="genre" class="form-control" id="genre" placeholder="{{ genres }}" value="{{ genres }}">
+          <small id="emailHelp" class="form-text text-muted">For multiple genres, enter each lowercase with a comma between genres. Eg: "comedy,drama,romance"</small>
         </div>
         <div class="form-group">
-          <label for="runtime">Runtime</label>
+          <label for="runtime">Runtime (in minutes)</label>
           <input type="text" name="runtime" class="form-control" id="runtime" placeholder="{{ m.runtime }} minutes" value="{{ m.runtime }}">
+        </div>
+        <div class="form-group">
+          <label for="posterURL">Poster URL</label>
+          <input type="text" name="posterURL" class="form-control" id="posterURL" placeholder="{{ m.posterURL }}" value="{{ m.posterURL }}">
+        </div>
+        <div class="form-group">
+          <label for="releaseDate">Release Date</label>
+          <input type="text" name="releaseDate" class="form-control" id="releaseDate" placeholder="{{ m.releaseDate }}" value="{{ m.releaseDate }}">
+          <small id="releaseDateHelp" class="form-text text-muted">Enter in format YYYY-MM-DD HH:MM:SS</small>
+        </div>
+        <div class="form-group">
+          <label for="countryOfOrigin">Country of Origin</label>
+          <input type="text" name="countryOfOrigin" class="form-control" id="countryOfOrigin" placeholder="{{ m.countryOfOrigin }}" value="{{ m.countryOfOrigin }}">
+        </div>
+        <div class="form-group">
+          <label for="language">Primary Language</label>
+          <input type="text" name="language" class="form-control" id="language" placeholder="{{ m.language }}" value="{{ m.language }}">
+        </div>
+        <div class="form-group">
+          <label for="budget">Budget</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">$</div>
+            </div>
+            <input type="text" name="budget" class="form-control" id="budget" placeholder="{{ m.budget }}" value="{{ m.budget }}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="boxOfficeOpeningWeekend">Box Office Opening Weekend</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">$</div>
+            </div>
+            <input type="text" name="boxOfficeOpeningWeekend" class="form-control" id="boxOfficeOpeningWeekend" placeholder="{{ m.boxOfficeOpeningWeekend }}" value="{{ m.boxOfficeOpeningWeekend }}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="boxOfficeGross">Box Office Gross</label>
+          <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">$</div>
+            </div>
+            <input type="text" name="boxOfficeGross" class="form-control" id="boxOfficeGross" placeholder="{{ m.boxOfficeGross }}" value="{{ m.boxOfficeGross }}">
+          </div>
         </div>
         <div class="form-group">
           <label for="overview">Synopsis</label>
           <textarea name="overview" class="form-control" id="overview" rows="3" placeholder="{{ m.overview }}" value="{{ m.overview }}">{{ m.overview }}</textarea>
         </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="isPlay" name="isPlay">
+          <label class="form-check-label" for="isPlay">Is it a play adaptation?</label>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="isNovel" name="isNovel">
+          <label class="form-check-label" for="isNovel">Is it a novel adaptation?</label>
+        </div>
         <div class="form-group">
           <label for="cast">Cast</label>
-          <textarea name="cast" class="form-control" id="cast" rows="3" value="{{ castDefault }}">{% for c in cast %}{{ c.name }},{{ c.role}}{% endfor %}</textarea>
+          <textarea name="cast" class="form-control" id="cast" rows="3" value="{{ castDefault }}">{% for c in cast %}{{ c.name }},{{ c.role}}
+{% endfor %}</textarea>
           <small id="emailHelp" class="form-text text-muted">Please enter one cast member,role pair per line. Eg: "Keira Knightley,Joan Clark"</small>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
