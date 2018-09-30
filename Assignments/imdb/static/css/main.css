@@ -35,6 +35,10 @@
   margin-bottom: 1rem;
 }
 
+ul.list-group, ul.award-group {
+  width: 50%;
+}
+
 ul.list-group li, ul.award-group li {
   background-color: #21292c;
 }

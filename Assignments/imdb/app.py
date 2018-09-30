@@ -16,7 +16,7 @@ import models
 # app.register_blueprint(test_api)
 
 # Define routes
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def main():
     m = models.Movie.query.all()
     return render_template('main.html', movies=m)
@@ -196,6 +196,16 @@ def save():
         return redirect('/movie/' + str(id))
 
     return render_template('/')
+
+@app.route('/search', methods=['POST', 'GET'])
+def search():
+    if request.method == 'POST':
+        title = request.form['searchTitle']
+        movies = db.session.query(models.Movie).filter_by(title=title)
+    else:
+        movies = []
+
+    return render_template('search.html', movies=movies)
 
 @app.route('/deleteMovie', methods=['POST', 'GET'])
 def delete():
