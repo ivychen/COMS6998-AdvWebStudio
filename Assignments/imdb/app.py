@@ -19,7 +19,19 @@ import models
 @app.route('/', methods=['POST', 'GET'])
 def main():
     m = models.Movie.query.all()
-    return render_template('main.html', movies=m)
+    series = db.session.query(models.Series.seriesId, models.Series.seriesName)\
+        .join(models.movieInSeries)\
+        .filter_by(seriesId=models.Series.seriesId, movieId=models.Movie.id).distinct()
+
+    seriesMovies = db.session.query(models.Series.seriesId, models.Movie)\
+        .join(models.movieInSeries)\
+        .filter_by(seriesId=models.Series.seriesId, movieId=models.Movie.id)\
+        .order_by(models.Movie.year).all()
+
+    print(series)
+    print(seriesMovies)
+
+    return render_template('main.html', movies=m, series=series, seriesMovies=seriesMovies)
 
 @app.route('/movie/<id>', methods=['GET'])
 def movie(id):
@@ -29,7 +41,7 @@ def movie(id):
         .filter_by(movieId=movie_data.id).all()
     cast = db.session.query(models.Talent.name, models.stars)\
         .join(models.stars)\
-        .filter_by(movieId=movie_data.id).all()
+        .filter_by(movieId=movie_data.id, talentId=models.Talent.tid).all()
     db.session.commit()
 
     releaseDate = datetime.strftime(movie_data.releaseDate, "%B %d, %Y")
@@ -42,6 +54,27 @@ def movie(id):
         return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre, releaseDate=releaseDate, budget=budget, boxOfficeOpeningWeekend=boxOfficeOpeningWeekend, boxOfficeGross=boxOfficeGross)
 
     return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre, releaseDate=releaseDate)
+
+@app.route('/series/<id>', methods=['GET'])
+def series(id):
+    series = models.Series.query.get(id)
+    seriesMovies = db.session.query(models.Movie)\
+        .join(models.movieInSeries)\
+        .filter_by(seriesId=id, movieId=models.Movie.id)\
+        .order_by(models.Movie.year).all()
+
+    cast = db.session.query(models.Movie, models.Talent, models.stars)\
+        .join(models.movieInSeries)\
+        .filter_by(seriesId=id, movieId=models.Movie.id)\
+        .join(models.stars)\
+        .filter_by(talentId=models.Talent.tid, movieId=models.Movie.id)\
+        .order_by(models.Movie.year).all()
+
+    casting = list(set([(x.Talent.name, x.role) for x in cast]))
+    chars = sorted(list(set([x.role for x in cast])))
+    totalrt = sum([m.runtime for m in seriesMovies])
+
+    return render_template('series.html', series=series, seriesMovies=seriesMovies, enumerate=enumerate, datetime=datetime, totalrt=totalrt, len=len, chars=chars, cast=cast)
 
 @app.route('/cast/<id>', methods=['GET'])
 def cast(id):

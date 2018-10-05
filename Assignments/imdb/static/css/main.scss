@@ -1,3 +1,8 @@
+$GRAPHITE: rgb(33, 41, 44);
+$LAVENWHITE: #eeedf0;
+$GOLD: #deb109;
+$MARIGOLD: #fec52e;
+
 .footer {
   background-color: rgb(33, 41, 44) !important;
   color: white;
@@ -13,14 +18,14 @@
   display:  flex;
   justify-content: space-between;
   flex-wrap:  wrap;
-  padding: 2rem 0 2rem 0;
-  background: rgb(33, 41, 44);
+  padding: 2rem 2rem 2rem 2rem;
+  background: $GRAPHITE;
 
   .card {
     border: none;
     border-radius: .125rem;
     background-color: transparent;
-    width: 16rem !important ;
+    width: 13rem !important ;
     margin-right: 0;
     margin-bottom: 1rem;
 
@@ -28,6 +33,15 @@
       color: #101415;
       box-shadow: 4px 4px 16px 1px;
     }
+  }
+}
+
+.card-grid.card-grid-series {
+  justify-content: space-evenly !important;
+  padding: 2rem 2rem 2rem 2rem;
+
+  .card {
+    width: 15rem !important;
   }
 }
 
@@ -39,19 +53,47 @@
 ul.list-group, ul.award-group {
   width: 50%;
   li {
-    background-color: rgb(33, 41, 44);
+    background-color: $GRAPHITE;
   }
 }
 
 body {
-  background: rgb(33, 41, 44);
+  background: $GRAPHITE;
   // color: white !important;
 }
 
-body > .container {
+body > .container-fluid {
   color: white;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+
+  .row {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .header.row {
+    padding: .5rem 2rem .5rem 2rem;
+    margin-bottom: .5rem;
+    background-color: $MARIGOLD;
+    color: $GRAPHITE;
+  }
+
+  .subheader.row {
+    padding: 2rem 2rem 0 2rem;
+    margin-bottom: .5rem;
+    color: $LAVENWHITE;
+
+    a, p {
+      color: $LAVENWHITE;
+    }
+  }
+
+  .inner-container {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
 }
 
 .navbar-nav {
@@ -63,6 +105,8 @@ nav.navbar.navbar-expand-lg {
 
   .navbar-brand {
     font-weight: bold;
+    height: 46px;
+    margin-left: 1rem;
   }
 
   a, li {
@@ -71,11 +115,12 @@ nav.navbar.navbar-expand-lg {
 }
 
 .movie {
+  display: inline-block;
   margin-bottom: 2rem;
 }
 
 .movie-poster {
-  max-width: 50%;
+  max-width: 40%;
   padding: 0 1rem 0 1rem;
 }
 
@@ -89,4 +134,32 @@ nav.navbar.navbar-expand-lg {
   &.btn-search {
     margin-bottom: 0;
   }
+}
+
+.modal {
+  .modal-content {
+    color: $GRAPHITE;
+    background-color: $LAVENWHITE;
+  }
+  .model-header {
+    color: white;
+  }
+
+  ul.list-group {
+    width: 100%;
+
+    .list-group-item {
+      color: $GRAPHITE;
+      background-color: $LAVENWHITE;
+    }
+  }
+}
+
+.btn-primary {
+  background-color: $MARIGOLD;
+  border-color: $MARIGOLD;
+}
+
+.char-btn {
+  color: $GRAPHITE;
 }

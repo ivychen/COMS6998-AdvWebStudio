@@ -12,7 +12,7 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding: 2rem 0 2rem 0;
+  padding: 2rem 2rem 2rem 2rem;
   background: #21292c;
 }
 
@@ -20,7 +20,7 @@
   border: none;
   border-radius: .125rem;
   background-color: transparent;
-  width: 16rem !important;
+  width: 13rem !important;
   margin-right: 0;
   margin-bottom: 1rem;
 }
@@ -28,6 +28,15 @@
 .card-grid .card a {
   color: #101415;
   box-shadow: 4px 4px 16px 1px;
+}
+
+.card-grid.card-grid-series {
+  justify-content: space-evenly !important;
+  padding: 2rem 2rem 2rem 2rem;
+}
+
+.card-grid.card-grid-series .card {
+  width: 15rem !important;
 }
 
 .page-header {
@@ -47,10 +56,37 @@ body {
   background: #21292c;
 }
 
-body > .container {
+body > .container-fluid {
   color: white;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+body > .container-fluid .row {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+body > .container-fluid .header.row {
+  padding: .5rem 2rem .5rem 2rem;
+  margin-bottom: .5rem;
+  background-color: #fec52e;
+  color: #21292c;
+}
+
+body > .container-fluid .subheader.row {
+  padding: 2rem 2rem 0 2rem;
+  margin-bottom: .5rem;
+  color: #eeedf0;
+}
+
+body > .container-fluid .subheader.row a, body > .container-fluid .subheader.row p {
+  color: #eeedf0;
+}
+
+body > .container-fluid .inner-container {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
 .navbar-nav {
@@ -63,6 +99,8 @@ nav.navbar.navbar-expand-lg {
 
 nav.navbar.navbar-expand-lg .navbar-brand {
   font-weight: bold;
+  height: 46px;
+  margin-left: 1rem;
 }
 
 nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
@@ -70,11 +108,12 @@ nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
 }
 
 .movie {
+  display: inline-block;
   margin-bottom: 2rem;
 }
 
 .movie-poster {
-  max-width: 50%;
+  max-width: 40%;
   padding: 0 1rem 0 1rem;
 }
 
@@ -88,4 +127,31 @@ nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
 
 .btn.btn-search {
   margin-bottom: 0;
+}
+
+.modal .modal-content {
+  color: #21292c;
+  background-color: #eeedf0;
+}
+
+.modal .model-header {
+  color: white;
+}
+
+.modal ul.list-group {
+  width: 100%;
+}
+
+.modal ul.list-group .list-group-item {
+  color: #21292c;
+  background-color: #eeedf0;
+}
+
+.btn-primary {
+  background-color: #fec52e;
+  border-color: #fec52e;
+}
+
+.char-btn {
+  color: #21292c;
 }

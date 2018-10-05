@@ -5,11 +5,33 @@
 {% block body %}
 
   {% block content %}
-  <div class="row">
-    <!-- <h1 class="page-header">Welcome to IMDB.</h1> -->
+  <div class="header row">
+    <h2>Series</h2>
   </div>
-  <div class="row">
-    <h2>Featured</h2>
+  {% for s in series %}
+    <div class="subheader row">
+      <h3><a href="/series/{{ s.seriesId }}">{{ s.seriesName }}</a></h3>
+    </div>
+    <div class="row card-grid card-grid-series">
+    {% for sm in seriesMovies %}
+      {% if s.seriesId == sm.seriesId %}
+      <div class="card">
+        <a href="/movie/{{ sm.Movie.id }}"><img class="card-img-top" src={{ sm.Movie.posterURL }} alt="Card image cap"></a>
+        <div class="card-header">
+          <h5 class="card-title">{{ sm.Movie.title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ sm.Movie.year }}</h6>
+        </div>
+        <div class="card-body">
+          <!-- <p class="card-text">{{ sm.Movie.overview }}</p> -->
+          <a href="/movie/{{ sm.Movie.id }}" class="btn btn-primary">MORE INFO</a>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+  {% endfor %}
+  <div class="header row">
+    <h2>All Films</h2>
   </div>
   <div class="row card-grid">
     {% for m in movies %}
@@ -19,10 +41,10 @@
         <h5 class="card-title">{{ m.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ m.year }}</h6>
       </div>
-      <div class="card-body">
+      <!-- <div class="card-body">
         <p class="card-text">{{ m.overview }}</p>
         <a href="/movie/{{ m.id }}" class="btn btn-primary">MORE INFO</a>
-      </div>
+      </div> -->
     </div>
     {% endfor %}
   </div>

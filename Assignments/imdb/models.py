@@ -26,6 +26,13 @@ talentWinsAward = db.Table(
     db.Column('awardId', db.Integer, db.ForeignKey('award.id', ondelete="CASCADE"), primary_key=True)
     )
 
+movieInSeries = db.Table(
+    'movieInSeries',
+    db.Column('seriesId', db.Integer, db.ForeignKey('series.seriesId', ondelete="CASCADE"), primary_key=True),
+    db.Column('movieId', db.Integer, db.ForeignKey('movie.id', ondelete="CASCADE"), primary_key=True),
+    db.Column('sequence', db.Integer, primary_key=True)
+)
+
 # Models
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -64,6 +71,16 @@ class Talent(db.Model):
 class Genre(db.Model):
     category = db.Column(db.Text, primary_key=True)
 
+class Series(db.Model):
+    seriesId = db.Column(db.Integer, primary_key=True)
+    seriesName = db.Column(db.Text)
+
+    # Relationships
+    movie = db.relationship('Movie', secondary=movieInSeries, backref=db.backref('series', cascade='all', lazy=True), lazy='subquery')
+
+    def __repr__(self):
+        return '<Series {}>'.format(self.seriesName)
+
 class Award(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     event = db.Column(db.Text, nullable=False)
@@ -73,5 +90,5 @@ class Award(db.Model):
 
     def __repr__(self):
         return "<Award {} {} {}".format(self.event, self.award, self.year)
-        
+
 # https://stackoverflow.com/questions/38654624/flask-sqlalchemy-many-to-many-relationship-new-attribute

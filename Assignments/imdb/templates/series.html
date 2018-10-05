@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %} IMDB {% endblock %}
+
+{% block body %}
+  {% block content %}
+  <div class="header row">
+    <h2>{{ series.seriesName }}</h2>
+  </div>
+  <div class="inner-container">
+  <p>NO. MOVIES: {{ len(seriesMovies) }}</p>
+  <p>TOTAL RUNTIME: {{ totalrt }} MINUTES</p>
+  <h2>Characters</h2>
+  {% for i,char in enumerate(chars) %}
+    <button class="modal-btn char-btn btn btn-primary" type="button" data-toggle="modal" modalNum="{{i}}" data-target="#{{i}}">{{char}}</button>
+    <!-- Modal -->
+    <div class="modal fade" id="{{i}}" tabindex="-1" role="dialog" aria-labelledby="charModel{{i}}" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centere" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel{{i}}">{{char}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group">
+              {% for c in cast %}
+                {% if c.role == char %}
+                <li class="list-group-item"><a href="/cast/{{ c.Talent.tid }}">{{ c.Talent.name }}</a> as {{ c.role }} in <a href="/movie/{{c.Movie.id}}">{{c.Movie.title}} ({{c.Movie.year}})</a></li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  <h2>Films</h2>
+    {% for movie_data in seriesMovies %}
+      <div class="movie">
+        <img src={{ movie_data.posterURL }} class="movie-poster rounded float-right" alt="...">
+        <h6 class="mb-2 text-muted">{{ movie_data.year }}
+        <h3><a href="/movie/{{movie_data.id}}">{{ movie_data.title }}</a></h3>
+        <p>RUNTIME: {{ movie_data.runtime }} MINUTES</p>
+        <p>RELEASE DATE: {{ datetime.strftime(movie_data.releaseDate, "%B %d, %Y") }}</p>
+        <p>COUNTRY OF ORIGIN: {{ movie_data.countryOfOrigin }}</p>
+        <p>LANGUAGE: {{ movie_data.language }}</p>
+        <p>{{ movie_data.overview }}</p>
+      </div>
+      <hr />
+    {% endfor %}
+  </div>
+  {% endblock %}
+{% endblock %}
