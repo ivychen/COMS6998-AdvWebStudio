@@ -2,6 +2,8 @@ $GRAPHITE: rgb(33, 41, 44);
 $LAVENWHITE: #eeedf0;
 $GOLD: #deb109;
 $MARIGOLD: #fec52e;
+$BEIGE: #e9ddce;
+$BLUE: #3eaede;
 
 .footer {
   background-color: rgb(33, 41, 44) !important;
@@ -41,7 +43,15 @@ $MARIGOLD: #fec52e;
   padding: 2rem 2rem 2rem 2rem;
 
   .card {
-    width: 14rem !important;
+    width: 13rem !important;
+  }
+}
+
+.card-grid.row.series {
+  justify-content: flex-start;
+  
+  .card {
+    margin-right: 2rem;
   }
 }
 
@@ -115,6 +125,18 @@ nav.navbar.navbar-expand-lg {
     margin-left: 1rem;
     border-bottom: 2px solid white;
     margin-bottom: .5rem;
+  }
+
+  .dropdown-menu {
+    background: $GRAPHITE;
+
+    .dropdown-divider {
+      border-top: 2px solid $MARIGOLD
+    }
+
+    .btn {
+      width: 100%;
+    }
   }
 
   a, li {
@@ -195,6 +217,10 @@ nav.navbar.navbar-expand-lg {
 
 .char-btn {
   color: $GRAPHITE;
+
+  a {
+    color: $GRAPHITE;
+  }
 }
 
 .form-search {
@@ -217,7 +243,7 @@ nav.navbar.navbar-expand-lg {
     display: inline-block;
 
     .carousel-inner {
-      max-width: 14rem;
+      max-width: 13rem;
       height: auto;
 
       .carousel-item {
@@ -228,8 +254,27 @@ nav.navbar.navbar-expand-lg {
 
         .carousel-caption {
           position: static;
+          margin-bottom: 1rem;
+          padding-top: 0;
+
+          a {
+            color: white;
+          }
         }
       }
     }
   }
+}
+
+.user-icon {
+  display: inline-flex;
+  align-items: center;
+  font-weight: bold;
+  justify-content: center;
+  background-color: $BLUE;
+  height: 32px;
+  width: 32px;
+  vertical-align: middle;
+  border-radius: 2px;
+  margin-left: .5rem;
 }

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block body %}
+  {% block content %}
+  <div class="header row">
+    <h2>Register</h2>
+  </div>
+
+  <div class="container">
+    {% from "_formhelpers.html" import render_field %}
+    <form method=post>
+      <dl>
+        {{ render_field(form.username) }}
+        {{ render_field(form.email) }}
+        {{ render_field(form.password) }}
+        {{ render_field(form.confirm) }}
+        {{ render_field(form.accept_tos) }}
+      </dl>
+
+      <!-- <label class="sr-only" for="username">Username</label>
+      <input type="text" class="form-control mb-2 mr-sm-2" id="username" placeholder="">
+
+      <label class="sr-only" for="password">Password</label>
+      <input type="text" class="form-control mb-2 mr-sm-2" id="password" placeholder="">
+
+      <label class="sr-only" for="emailaddress">Email Address</label>
+      <input type="text" class="form-control mb-2 mr-sm-2" id="emailaddress" placeholder=""> -->
+
+      <button type="submit" class="btn btn-primary mb-2">Register</button>
+    </form>
+  </div>
+  {% endblock %}
+{% endblock %}

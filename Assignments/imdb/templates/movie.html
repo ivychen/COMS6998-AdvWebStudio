@@ -18,6 +18,10 @@
           <p>LANGUAGE: {{ movie_data.language }}</p>
           <p>{{ movie_data.overview }}</p>
 
+          <h4>Series</h4>
+          {% for s in series %}
+          <button class="modal-btn char-btn btn btn-primary" type="button"><a href="/series/{{s.seriesId}}">{{s.seriesName}}</a></button>
+          {% endfor %}
 
           <h4>Awards</h4>
           <ul class="award-group">

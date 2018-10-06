@@ -4,7 +4,7 @@
 {% block body %}
   {% block content %}
   <div class="header row">
-    <h2>{{ series.seriesName }}</h2>
+    <h2>{{ series.seriesName }} (Series)</h2>
   </div>
   <div class="inner-container">
   <p>NO. MOVIES: {{ len(seriesMovies) }}</p>
@@ -39,19 +39,19 @@
     </div>
   {% endfor %}
   <h2>Films</h2>
-    {% for movie_data in seriesMovies %}
-      <div class="movie">
-        <img src={{ movie_data.posterURL }} class="movie-poster rounded float-right" alt="...">
-        <h6 class="mb-2 text-muted">{{ movie_data.year }}
-        <h3><a href="/movie/{{movie_data.id}}">{{ movie_data.title }}</a></h3>
-        <p>RUNTIME: {{ movie_data.runtime }} MINUTES</p>
-        <p>RELEASE DATE: {{ datetime.strftime(movie_data.releaseDate, "%B %d, %Y") }}</p>
-        <p>COUNTRY OF ORIGIN: {{ movie_data.countryOfOrigin }}</p>
-        <p>LANGUAGE: {{ movie_data.language }}</p>
-        <p>{{ movie_data.overview }}</p>
+    <div class="row series card-grid">
+    {% for m in seriesMovies %}
+      <div class="card">
+        <div class="card-movie-poster">
+          <a href="/movie/{{ m.id }}"><img class="card-img-top" src={{ m.posterURL }} alt="Card image cap"></a>
+        </div>
+        <div class="card-header">
+          <h5 class="card-title">{{ m.title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ m.year }}</h6>
+        </div>
       </div>
-      <hr />
     {% endfor %}
+    </div>
   </div>
   {% endblock %}
 {% endblock %}

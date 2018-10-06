@@ -5,10 +5,11 @@
 {% block body %}
 
   {% block content %}
-  <div class="marigold container-fluid">
-  </div>
   <div class="header row">
     <h2>Movie Series</h2>
+  </div>
+  <div class="row">
+    <p>Explore movies, characters and actors in each series.</p>
   </div>
   {% for s in series %}
     <div class="seriesCarousel">
@@ -16,6 +17,7 @@
         <div class="subheader">
           <h3><a href="/series/{{ s.seriesId }}">{{ s.seriesName }}</a></h3>
         </div>
+        <!-- <p>MOVIES: {{s.count}}</p> -->
         <ol class="carousel-indicators">
           {% for i in range(s.count) %}
             {% if i == 0 %}
@@ -36,7 +38,7 @@
                   </div>
                 </a>
                 <div class="carousel-caption d-none d-md-block">
-                  <h5>{{ sm.Movie.title }}</h5>
+                  <a href="/movie/{{ sm.Movie.id }}"><h5>{{ sm.Movie.title }}</h5></a>
                   <p>{{ sm.Movie.year }}</p>
                 </div>
                 <!-- <a href="/movie/{{ sm.Movie.id }}" class="btn btn-primary">MORE INFO</a> -->
@@ -50,7 +52,7 @@
                   </div>
                 </a>
                 <div class="carousel-caption d-none d-md-block">
-                  <h5>{{ sm.Movie.title }}</h5>
+                  <a href="/movie/{{ sm.Movie.id }}"><h5>{{ sm.Movie.title }}</h5></a>
                   <p>{{ sm.Movie.year }}</p>
                 </div>
                 <!-- <a href="/movie/{{ sm.Movie.id }}" class="btn btn-primary">MORE INFO</a> -->
@@ -69,26 +71,7 @@
       </div>
     </div>
   {% endfor %}
-  <div class="header row">
-    <h2>All Films</h2>
-  </div>
-  <div class="row card-grid">
-    {% for m in movies %}
-    <div class="card">
-      <div class="card-movie-poster">
-        <a href="/movie/{{ m.id }}"><img class="card-img-top" src={{ m.posterURL }} alt="Card image cap"></a>
-      </div>
-      <div class="card-header">
-        <h5 class="card-title">{{ m.title }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ m.year }}</h6>
-      </div>
-      <!-- <div class="card-body">
-        <p class="card-text">{{ m.overview }}</p>
-        <a href="/movie/{{ m.id }}" class="btn btn-primary">MORE INFO</a>
-      </div> -->
-    </div>
-    {% endfor %}
-  </div>
+
   {% endblock %}
 
 {% endblock %}

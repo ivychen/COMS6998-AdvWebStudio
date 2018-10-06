@@ -1,4 +1,5 @@
 from app import db
+from flask_login import UserMixin
 
 # Association Tables
 stars = db.Table(
@@ -91,12 +92,13 @@ class Award(db.Model):
     def __repr__(self):
         return "<Award {} {} {}".format(self.event, self.award, self.year)
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     username = db.Column(db.String(140), primary_key=True)
     password = db.Column(db.String(140))
     email = db.Column(db.Text, unique=True)
 
+    def get_id(self):
+        return str(self.username)
+
     def __repr__(self):
         return "<User {} {}".format(self.username, self.email)
-
-# https://stackoverflow.com/questions/38654624/flask-sqlalchemy-many-to-many-relationship-new-attribute

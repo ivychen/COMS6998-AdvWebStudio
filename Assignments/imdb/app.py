@@ -9,7 +9,6 @@ from sqlalchemy import func
 
 # Custom app modules
 from config import Config
-# from user_class import User
 
 # === APP CONFIGURATION ===
 app = Flask(__name__)
@@ -20,7 +19,6 @@ login_manager.init_app(app)
 login_manager.login_view = '/'
 db = SQLAlchemy(app)
 import models
-# app.register_blueprint(test_api)
 
 # FORMS
 class UserLoginForm(Form):
@@ -42,7 +40,7 @@ class RegistrationForm(Form):
 @app.route('/', methods=['POST', 'GET'])
 def main():
     m = models.Movie.query.all()
-    series = db.session.query(models.Series.seriesId, models.Series.seriesName, func.count(models.Series.seriesId).label('count'))\
+    series = db.session.query(models.Series.seriesId, models.Series.seriesName, func.count(models.Series.seriesId).label('count'), func.sum(models.Movie.runtime).label('runtime'))\
         .join(models.movieInSeries)\
         .filter_by(seriesId=models.Series.seriesId, movieId=models.Movie.id)\
         .group_by(models.Series.seriesId).all()
@@ -59,11 +57,15 @@ def movie(id):
     movie_data = models.Movie.query.get(id)
     genre = db.session.query(models.Genre.category)\
         .join(models.movieIsGenre)\
-        .filter_by(movieId=movie_data.id).all()
+        .filter_by(movieId=id).all()
     cast = db.session.query(models.Talent.name, models.stars)\
         .join(models.stars)\
-        .filter_by(movieId=movie_data.id, talentId=models.Talent.tid).all()
+        .filter_by(movieId=id, talentId=models.Talent.tid).all()
     db.session.commit()
+
+    series = db.session.query(models.Series.seriesId, models.Series.seriesName)\
+        .join(models.movieInSeries)\
+        .filter_by(seriesId=models.Series.seriesId, movieId=id).all()
 
     releaseDate = datetime.strftime(movie_data.releaseDate, "%B %d, %Y")
 
@@ -72,9 +74,15 @@ def movie(id):
         boxOfficeOpeningWeekend = "{0:,.2f}".format(movie_data.boxOfficeOpeningWeekend)
         boxOfficeGross = "{0:,.2f}".format(movie_data.boxOfficeGross)
 
-        return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre, releaseDate=releaseDate, budget=budget, boxOfficeOpeningWeekend=boxOfficeOpeningWeekend, boxOfficeGross=boxOfficeGross)
+        return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre, releaseDate=releaseDate, budget=budget, boxOfficeOpeningWeekend=boxOfficeOpeningWeekend, boxOfficeGross=boxOfficeGross, series=series)
 
-    return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre, releaseDate=releaseDate)
+    return render_template('movie.html', movie_data=movie_data, cast=cast, genre=genre, releaseDate=releaseDate, series=series)
+
+@app.route('/movies')
+def movies():
+    m = models.Movie.query.order_by(models.Movie.title).all()
+
+    return render_template('movies.html', movies=m)
 
 @app.route('/series/<id>', methods=['GET'])
 def series(id):
@@ -104,8 +112,6 @@ def cast(id):
         .join(models.stars)\
         .filter_by(talentId=cast_data.tid)\
         .order_by(models.Movie.year.desc()).all()
-
-    print(m)
 
     return render_template('cast.html', cast=cast_data, movies=m)
 
@@ -156,8 +162,6 @@ def updateMovie(id):
         .filter_by(movieId=movie_data.id).all()
 
     genres = ",".join([g[0] for g in genre])
-
-    print(genres)
 
     cast = db.session.query(models.Talent.name, models.stars)\
         .join(models.stars)\
@@ -231,7 +235,6 @@ def save():
             movieGenreExists = db.session.query(models.movieIsGenre)\
                 .filter_by(movieId=id, category=g).first()
 
-            print("EXISTS", movieGenreExists)
             if not genreExists:
                 tmp = models.Genre(category=g)
                 db.session.add(tmp)
@@ -273,14 +276,7 @@ def delete():
 # === LOGIN ====
 @login_manager.user_loader
 def load_user(username):
-    cursor = g.conn.execute("SELECT * FROM Users U WHERE U.username=%s", username)
-    data = cursor.fetchone()
-    cursor.close()
-
-    if data is None:
-        return None
-
-    return User(data[0], data[1], data[2])
+    return models.User.query.get(username)
 
 def authenticate_user(user):
     cursor = g.conn.execute("SELECT * FROM Users U WHERE U.username=%s", user.username)
@@ -294,41 +290,29 @@ def authenticate_user(user):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('main'))
+
     form = UserLoginForm(request.form)
     error = None
-    if request.method == 'POST' and form.validate():
-        user = models.User.query.filter_by(username=username.lower()).first()
+    if request.method == 'POST':
+        user = models.User.query.filter_by(username=request.form['username'].lower()).first()
         if user:
             if login_user(user):
-                app.logger.debug('Logged in user %s', user.username)
-                return redirect(url_for('/'))
+                # app.logger.debug('Logged in user %s', user.username)
+                return redirect(url_for('main'))
         error = 'Invalid username or password.'
     return render_template('login.html', form=form, error=error)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'GET':
-        return render_template('register.html')
-
-    error = None
-
-    if request.method == 'POST':
-        try:
-            new_user = User(request.form['username'],
-                      request.form['password'],
-                      request.form['email'])
-
-        except ValueError:
-            error = "Username or Password is empty"
-
-        if (not is_registered_user(new_user)):
-            register_user(new_user)
-            login_user(new_user)
-            return redirect(url_for('main'))
-        else:
-            error = "Username or email taken."
-
-    return render_template('register.html', error=error)
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
+        user = models.User(form.username.data, form.password.data, form.email.data)
+        db_session.add(user)
+        # flash('Thanks for registering')
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
 
 def register_user(user):
     cursor = g.conn.execute("INSERT INTO Users (username, password, email) VALUES (%s, %s, %s)", (user.username, user.password, user.email))

@@ -36,7 +36,15 @@
 }
 
 .card-grid.card-grid-series .card {
-  width: 14rem !important;
+  width: 13rem !important;
+}
+
+.card-grid.row.series {
+  justify-content: flex-start;
+}
+
+.card-grid.row.series .card {
+  margin-right: 2rem;
 }
 
 .page-header {
@@ -109,6 +117,18 @@ nav.navbar.navbar-expand-lg .navbar-brand {
   margin-left: 1rem;
   border-bottom: 2px solid white;
   margin-bottom: .5rem;
+}
+
+nav.navbar.navbar-expand-lg .dropdown-menu {
+  background: #21292c;
+}
+
+nav.navbar.navbar-expand-lg .dropdown-menu .dropdown-divider {
+  border-top: 2px solid #fec52e;
+}
+
+nav.navbar.navbar-expand-lg .dropdown-menu .btn {
+  width: 100%;
 }
 
 nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
@@ -188,6 +208,10 @@ nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
   color: #21292c;
 }
 
+.char-btn a {
+  color: #21292c;
+}
+
 .form-search .input-group {
   margin-bottom: 0 !important;
   min-width: 360px;
@@ -208,7 +232,7 @@ nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
 }
 
 .seriesCarousel .carousel.slide.series .carousel-inner {
-  max-width: 14rem;
+  max-width: 13rem;
   height: auto;
 }
 
@@ -219,4 +243,23 @@ nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
 
 .seriesCarousel .carousel.slide.series .carousel-inner .carousel-item .carousel-caption {
   position: static;
+  margin-bottom: 1rem;
+  padding-top: 0;
+}
+
+.seriesCarousel .carousel.slide.series .carousel-inner .carousel-item .carousel-caption a {
+  color: white;
+}
+
+.user-icon {
+  display: inline-flex;
+  align-items: center;
+  font-weight: bold;
+  justify-content: center;
+  background-color: #3eaede;
+  height: 32px;
+  width: 32px;
+  vertical-align: middle;
+  border-radius: 2px;
+  margin-left: .5rem;
 }
