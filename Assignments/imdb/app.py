@@ -257,12 +257,35 @@ def save():
 @app.route('/search', methods=['POST', 'GET'])
 def search():
     if request.method == 'POST':
-        title = request.form['searchTitle']
-        movies = db.session.query(models.Movie).filter_by(title=title)
+        # search query can include:
+        # - movie title
+        # - movie series
+        # - movie genre
+        search = request.form['searchTitle']
+        movieSet = set()
+        allMovies = []
+        movies = models.Movie.query.filter(db.func.lower(models.Movie.title) == search.lower()).all()
+        genreMovies = db.session.query(models.Movie).join(models.movieIsGenre).filter_by(movieId=models.Movie.id,category=search).all()
+        series = models.Series.query.filter(db.func.lower(models.Series.seriesName) == search.lower()).all()
+        for m in movies:
+            if m.id not in movieSet:
+                movieSet.add(m.id)
+                allMovies.append(m)
+        for m in genreMovies:
+            if m.id not in movieSet:
+                movieSet.add(m.id)
+                allMovies.append(m)
+        seriesMovies = db.session.query(models.Series.seriesId, models.Movie)\
+            .join(models.movieInSeries)\
+            .filter_by(seriesId=models.Series.seriesId, movieId=models.Movie.id)\
+            .order_by(models.Movie.year).all()
     else:
-        movies = []
+        series = []
+        allMovies = []
+        search = "No results for search"
+        seriesMovies = []
 
-    return render_template('search.html', movies=movies)
+    return render_template('search.html', search=search, allMovies=allMovies, series=series, seriesMovies=seriesMovies, len=len)
 
 @app.route('/deleteMovie', methods=['POST', 'GET'])
 def delete():

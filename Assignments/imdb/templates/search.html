@@ -5,25 +5,61 @@
 {% block body %}
 
   {% block content %}
-  <div class="row">
+  <div class="header row">
+    <h2>Search Results: {{ search }}</h2>
   </div>
+
+  <!-- Series Results -->
   <div class="row">
-    <h2>Search Results</h2>
+    <h3>Series</h3>
+  </div>
+  <div class="inner-container">
+    {% if len(series) == 0 %}
+    Sorry! No series have this name.
+    {% endif %}
+    {% for s in series %}
+    <button class="modal-btn char-btn btn btn-primary" type="button"><a href="/series/{{s.seriesId}}">{{s.seriesName}}</a></button>
+    {% endfor %}
+  </div>
+
+  <br />
+
+  <!-- Movies results -->
+  <div class="row">
+    <h3>Movies</h3>
   </div>
   <div class="row card-grid">
-    {% for m in movies %}
+    {% for m in allMovies %}
     <div class="card">
       <a href="/movie/{{ m.id }}"><img class="card-img-top" src={{ m.posterURL }} alt="Card image cap"></a>
       <div class="card-header">
         <h5 class="card-title">{{ m.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ m.year }}</h6>
       </div>
-      <div class="card-body">
+      <!-- <div class="card-body">
         <p class="card-text">{{ m.overview }}</p>
         <a href="/movie/{{ m.id }}" class="btn btn-primary">MORE INFO</a>
-      </div>
+      </div> -->
     </div>
     {% endfor %}
+
+    <!-- {% for s in series %}
+      {% for sm in seriesMovies %}
+        {% if s.seriesId == sm.seriesId %}
+        <div class="card">
+          <a href="/movie/{{ sm.Movie.id }}"><img class="card-img-top" src={{ sm.Movie.posterURL }} alt="Card image cap"></a>
+          <div class="card-header">
+            <h5 class="card-title">{{ sm.Movie.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ sm.Movie.year }}</h6>
+          </div>
+          <div class="card-body">
+            <p class="card-text">{{ sm.Movie.overview }}</p>
+            <a href="/movie/{{ sm.Movie.id }}" class="btn btn-primary">MORE INFO</a>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    {% endfor %} -->
   </div>
   {% endblock %}
 

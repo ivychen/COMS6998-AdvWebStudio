@@ -20,7 +20,7 @@ $BLUE: #3eaede;
   display:  flex;
   justify-content: space-between;
   flex-wrap:  wrap;
-  padding: 2rem 2rem 2rem 2rem;
+  padding: 0 2rem 0 2rem;
   background: $GRAPHITE;
 
   .card {
@@ -49,7 +49,7 @@ $BLUE: #3eaede;
 
 .card-grid.row.series {
   justify-content: flex-start;
-  
+
   .card {
     margin-right: 2rem;
   }
@@ -226,7 +226,7 @@ nav.navbar.navbar-expand-lg {
 .form-search {
   .input-group {
     margin-bottom: 0 !important;
-    min-width: 360px;
+    min-width: 400px;
   }
 }
 

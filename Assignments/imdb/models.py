@@ -34,6 +34,12 @@ movieInSeries = db.Table(
     db.Column('sequence', db.Integer, primary_key=True)
 )
 
+watchedMovies = db.Table(
+    'watchedMovies',
+    db.Column('username', db.Text, db.ForeignKey('user.username', ondelete="CASCADE"), primary_key=True),
+    db.Column('movieId', db.Integer, db.ForeignKey('movie.id', ondelete="CASCADE"), primary_key=True)
+)
+
 # Models
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
