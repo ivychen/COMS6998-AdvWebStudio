@@ -5,29 +5,68 @@
 {% block body %}
 
   {% block content %}
+  <div class="marigold container-fluid">
+  </div>
   <div class="header row">
-    <h2>Series</h2>
+    <h2>Movie Series</h2>
   </div>
   {% for s in series %}
-    <div class="subheader row">
-      <h3><a href="/series/{{ s.seriesId }}">{{ s.seriesName }}</a></h3>
-    </div>
-    <div class="row card-grid card-grid-series">
-    {% for sm in seriesMovies %}
-      {% if s.seriesId == sm.seriesId %}
-      <div class="card">
-        <a href="/movie/{{ sm.Movie.id }}"><img class="card-img-top" src={{ sm.Movie.posterURL }} alt="Card image cap"></a>
-        <div class="card-header">
-          <h5 class="card-title">{{ sm.Movie.title }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ sm.Movie.year }}</h6>
+    <div class="seriesCarousel">
+      <div id="Carousel{{s.seriesId}}" class="carousel slide series" data-ride="carousel">
+        <div class="subheader">
+          <h3><a href="/series/{{ s.seriesId }}">{{ s.seriesName }}</a></h3>
         </div>
-        <div class="card-body">
-          <!-- <p class="card-text">{{ sm.Movie.overview }}</p> -->
-          <a href="/movie/{{ sm.Movie.id }}" class="btn btn-primary">MORE INFO</a>
+        <ol class="carousel-indicators">
+          {% for i in range(s.count) %}
+            {% if i == 0 %}
+              <li data-target="#Carousel{{s.seriesId}}" data-slide-to="{{i}}" class="active"></li>
+            {% else %}
+              <li data-target="#Carousel{{s.seriesId}}" data-slide-to="{{i}}"></li>
+            {% endif %}
+          {% endfor %}
+        </ol>
+        <div class="carousel-inner">
+          {% set vars = {'first': True} %}
+          {% for sm in seriesMovies %}
+            {% if s.seriesId == sm.seriesId and vars.first %}
+              <div class="carousel-item active">
+                <a href="/movie/{{ sm.Movie.id }}">
+                  <div class="carousel-img-crop">
+                    <img class="d-block w-100" src="{{sm.Movie.posterURL}}">
+                  </div>
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>{{ sm.Movie.title }}</h5>
+                  <p>{{ sm.Movie.year }}</p>
+                </div>
+                <!-- <a href="/movie/{{ sm.Movie.id }}" class="btn btn-primary">MORE INFO</a> -->
+              </div>
+              {% if vars.update({'first': False})%}{% endif %}
+            {% elif s.seriesId == sm.seriesId %}
+              <div class="carousel-item">
+                <a href="/movie/{{ sm.Movie.id }}">
+                  <div class="carousel-img-crop">
+                    <img class="d-block w-100" src="{{sm.Movie.posterURL}}">
+                  </div>
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>{{ sm.Movie.title }}</h5>
+                  <p>{{ sm.Movie.year }}</p>
+                </div>
+                <!-- <a href="/movie/{{ sm.Movie.id }}" class="btn btn-primary">MORE INFO</a> -->
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
+        <a class="carousel-control-prev" href="#Carousel{{s.seriesId}}" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#Carousel{{s.seriesId}}" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
       </div>
-      {% endif %}
-    {% endfor %}
     </div>
   {% endfor %}
   <div class="header row">
@@ -36,7 +75,9 @@
   <div class="row card-grid">
     {% for m in movies %}
     <div class="card">
-      <a href="/movie/{{ m.id }}"><img class="card-img-top" src={{ m.posterURL }} alt="Card image cap"></a>
+      <div class="card-movie-poster">
+        <a href="/movie/{{ m.id }}"><img class="card-img-top" src={{ m.posterURL }} alt="Card image cap"></a>
+      </div>
       <div class="card-header">
         <h5 class="card-title">{{ m.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ m.year }}</h6>

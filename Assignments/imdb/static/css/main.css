@@ -36,7 +36,7 @@
 }
 
 .card-grid.card-grid-series .card {
-  width: 15rem !important;
+  width: 14rem !important;
 }
 
 .page-header {
@@ -57,6 +57,10 @@ body {
 }
 
 body > .container-fluid {
+  margin-top: 0 !important;
+}
+
+body > .container-fluid {
   color: white;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -68,19 +72,18 @@ body > .container-fluid .row {
 }
 
 body > .container-fluid .header.row {
-  padding: .5rem 2rem .5rem 2rem;
-  margin-bottom: .5rem;
+  padding: .25rem 2rem .25rem 2rem;
+  margin-bottom: 1rem;
   background-color: #fec52e;
   color: #21292c;
 }
 
-body > .container-fluid .subheader.row {
-  padding: 2rem 2rem 0 2rem;
+body > .container-fluid .subheader {
   margin-bottom: .5rem;
   color: #eeedf0;
 }
 
-body > .container-fluid .subheader.row a, body > .container-fluid .subheader.row p {
+body > .container-fluid .subheader a, body > .container-fluid .subheader p {
   color: #eeedf0;
 }
 
@@ -91,6 +94,8 @@ body > .container-fluid .inner-container {
 
 .navbar-nav {
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 nav.navbar.navbar-expand-lg {
@@ -99,8 +104,11 @@ nav.navbar.navbar-expand-lg {
 
 nav.navbar.navbar-expand-lg .navbar-brand {
   font-weight: bold;
+  font-size: 1.5rem;
   height: 46px;
   margin-left: 1rem;
+  border-bottom: 2px solid white;
+  margin-bottom: .5rem;
 }
 
 nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
@@ -110,6 +118,10 @@ nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
 .movie {
   display: inline-block;
   margin-bottom: 2rem;
+}
+
+.marigold {
+  background-color: #fec52e;
 }
 
 .movie-poster {
@@ -152,6 +164,59 @@ nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
   border-color: #fec52e;
 }
 
+.btn-outline-success {
+  border-color: #fec52e;
+  color: white;
+}
+
+.btn-outline-success:hover {
+  background-color: #fec52e;
+  border-color: #fec52e;
+  color: #21292c;
+  transition: background-color .15s ease-in-out, color .15s ease-in-out;
+}
+
+.btn-outline-success.login {
+  margin-bottom: 0;
+}
+
+.btn-outline-success.register {
+  margin-bottom: 0;
+}
+
 .char-btn {
   color: #21292c;
+}
+
+.form-search .input-group {
+  margin-bottom: 0 !important;
+  min-width: 360px;
+}
+
+.card-movie-poster {
+  max-height: 308.14px;
+  overflow: hidden;
+}
+
+.seriesCarousel {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.seriesCarousel .carousel.slide.series {
+  display: inline-block;
+}
+
+.seriesCarousel .carousel.slide.series .carousel-inner {
+  max-width: 14rem;
+  height: auto;
+}
+
+.seriesCarousel .carousel.slide.series .carousel-inner .carousel-item .carousel-img-crop {
+  height: 327px;
+  overflow: hidden;
+}
+
+.seriesCarousel .carousel.slide.series .carousel-inner .carousel-item .carousel-caption {
+  position: static;
 }

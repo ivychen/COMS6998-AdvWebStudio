@@ -1,37 +1,58 @@
 from flask import Flask, g, render_template, request, jsonify, url_for, redirect, Response
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from wtforms import Form, BooleanField, StringField, TextField, PasswordField, validators
 # from TestAPI import test_api
 from flask_bootstrap import Bootstrap
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 # Custom app modules
 from config import Config
+# from user_class import User
 
 # === APP CONFIGURATION ===
 app = Flask(__name__)
 app.config.from_object(Config)
 Bootstrap(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = '/'
 db = SQLAlchemy(app)
 import models
 # app.register_blueprint(test_api)
+
+# FORMS
+class UserLoginForm(Form):
+    username = TextField('Username', [validators.Required(), validators.Length(min=4, max=25)])
+    password = PasswordField('Password', [validators.Required(), validators.Length(min=6, max=200)])
+    email = TextField('Email Address', [validators.Required(), validators.Length(min=4, max=25)])
+
+class RegistrationForm(Form):
+    username = StringField('Username', [validators.Length(min=4, max=25)])
+    email = StringField('Email Address', [validators.Length(min=6, max=35)])
+    password = PasswordField('New Password', [
+        validators.DataRequired(),
+        validators.EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat Password')
+    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
 
 # Define routes
 @app.route('/', methods=['POST', 'GET'])
 def main():
     m = models.Movie.query.all()
-    series = db.session.query(models.Series.seriesId, models.Series.seriesName)\
+    series = db.session.query(models.Series.seriesId, models.Series.seriesName, func.count(models.Series.seriesId).label('count'))\
         .join(models.movieInSeries)\
-        .filter_by(seriesId=models.Series.seriesId, movieId=models.Movie.id).distinct()
+        .filter_by(seriesId=models.Series.seriesId, movieId=models.Movie.id)\
+        .group_by(models.Series.seriesId).all()
 
     seriesMovies = db.session.query(models.Series.seriesId, models.Movie)\
         .join(models.movieInSeries)\
         .filter_by(seriesId=models.Series.seriesId, movieId=models.Movie.id)\
         .order_by(models.Movie.year).all()
 
-    print(series)
-    print(seriesMovies)
-
-    return render_template('main.html', movies=m, series=series, seriesMovies=seriesMovies)
+    return render_template('main.html', movies=m, series=series, seriesMovies=seriesMovies, range=range)
 
 @app.route('/movie/<id>', methods=['GET'])
 def movie(id):
@@ -248,6 +269,87 @@ def delete():
         db.session.commit()
 
     return redirect('/')
+
+# === LOGIN ====
+@login_manager.user_loader
+def load_user(username):
+    cursor = g.conn.execute("SELECT * FROM Users U WHERE U.username=%s", username)
+    data = cursor.fetchone()
+    cursor.close()
+
+    if data is None:
+        return None
+
+    return User(data[0], data[1], data[2])
+
+def authenticate_user(user):
+    cursor = g.conn.execute("SELECT * FROM Users U WHERE U.username=%s", user.username)
+    data = cursor.fetchone()
+    cursor.close()
+
+    if data[1] == user.password:
+        return True
+    else:
+        return False
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = UserLoginForm(request.form)
+    error = None
+    if request.method == 'POST' and form.validate():
+        user = models.User.query.filter_by(username=username.lower()).first()
+        if user:
+            if login_user(user):
+                app.logger.debug('Logged in user %s', user.username)
+                return redirect(url_for('/'))
+        error = 'Invalid username or password.'
+    return render_template('login.html', form=form, error=error)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+
+    error = None
+
+    if request.method == 'POST':
+        try:
+            new_user = User(request.form['username'],
+                      request.form['password'],
+                      request.form['email'])
+
+        except ValueError:
+            error = "Username or Password is empty"
+
+        if (not is_registered_user(new_user)):
+            register_user(new_user)
+            login_user(new_user)
+            return redirect(url_for('main'))
+        else:
+            error = "Username or email taken."
+
+    return render_template('register.html', error=error)
+
+def register_user(user):
+    cursor = g.conn.execute("INSERT INTO Users (username, password, email) VALUES (%s, %s, %s)", (user.username, user.password, user.email))
+
+    cursor.close()
+
+def is_registered_user(user):
+    cursor = g.conn.execute("SELECT * FROM Users U WHERE U.username=%s", (user.username, ))
+    data = cursor.fetchone()
+    cursor.close()
+
+    if data:
+        return True
+    else:
+        return False
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main'))
 
 if __name__ == '__main__':
     app.run(debug=True)

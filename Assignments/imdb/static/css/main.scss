@@ -41,7 +41,7 @@ $MARIGOLD: #fec52e;
   padding: 2rem 2rem 2rem 2rem;
 
   .card {
-    width: 15rem !important;
+    width: 14rem !important;
   }
 }
 
@@ -63,6 +63,10 @@ body {
 }
 
 body > .container-fluid {
+  margin-top: 0 !important;
+}
+
+body > .container-fluid {
   color: white;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -71,16 +75,15 @@ body > .container-fluid {
     padding-left: 2rem;
     padding-right: 2rem;
   }
-  
+
   .header.row {
-    padding: .5rem 2rem .5rem 2rem;
-    margin-bottom: .5rem;
+    padding: .25rem 2rem .25rem 2rem;
+    margin-bottom: 1rem;
     background-color: $MARIGOLD;
     color: $GRAPHITE;
   }
 
-  .subheader.row {
-    padding: 2rem 2rem 0 2rem;
+  .subheader {
     margin-bottom: .5rem;
     color: $LAVENWHITE;
 
@@ -98,6 +101,8 @@ body > .container-fluid {
 
 .navbar-nav {
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 nav.navbar.navbar-expand-lg {
@@ -105,8 +110,11 @@ nav.navbar.navbar-expand-lg {
 
   .navbar-brand {
     font-weight: bold;
+    font-size: 1.5rem;
     height: 46px;
     margin-left: 1rem;
+    border-bottom: 2px solid white;
+    margin-bottom: .5rem;
   }
 
   a, li {
@@ -117,6 +125,10 @@ nav.navbar.navbar-expand-lg {
 .movie {
   display: inline-block;
   margin-bottom: 2rem;
+}
+
+.marigold {
+  background-color: $MARIGOLD;
 }
 
 .movie-poster {
@@ -160,6 +172,64 @@ nav.navbar.navbar-expand-lg {
   border-color: $MARIGOLD;
 }
 
+.btn-outline-success {
+  border-color: $MARIGOLD;
+  color: white;
+
+  &:hover {
+    background-color: $MARIGOLD;
+    border-color: $MARIGOLD;
+    color: $GRAPHITE;
+    transition: background-color .15s ease-in-out,
+                color .15s ease-in-out;
+  }
+
+  &.login {
+    margin-bottom: 0;
+  }
+
+  &.register {
+    margin-bottom: 0;
+  }
+}
+
 .char-btn {
   color: $GRAPHITE;
+}
+
+.form-search {
+  .input-group {
+    margin-bottom: 0 !important;
+    min-width: 360px;
+  }
+}
+
+.card-movie-poster {
+  max-height: 308.14px;
+  overflow: hidden;
+}
+
+.seriesCarousel {
+  margin-left: 1rem;
+  margin-right: 1rem;
+
+  .carousel.slide.series {
+    display: inline-block;
+
+    .carousel-inner {
+      max-width: 14rem;
+      height: auto;
+
+      .carousel-item {
+        .carousel-img-crop {
+          height: 327px;
+          overflow: hidden;
+        }
+
+        .carousel-caption {
+          position: static;
+        }
+      }
+    }
+  }
 }
