@@ -11,17 +11,20 @@
       </div>
       <div class="inner-container container-fluid">
         <div class="movie">
+          <div class="movie-heading row">
           <img src={{ movie_data.posterURL }} class="movie-poster rounded float-right" alt="...">
-          <p>RUNTIME: {{ movie_data.runtime }} MINUTES</p>
-          <p>RELEASE DATE: {{ movie_data.releaseDate }}</p>
-          <p>COUNTRY OF ORIGIN: {{ movie_data.countryOfOrigin }}</p>
-          <p>LANGUAGE: {{ movie_data.language }}</p>
+          <p><b>{{ movie_data.runtime }}</b> min &middot; {{ releaseDate }} &middot; {{ movie_data.language }}</p>
+          <!-- <p>RELEASE DATE: {{ movie_data.releaseDate }}</p>
+          <p>COUNTRY OF ORIGIN: {{ movie_data.countryOfOrigin }}</p> -->
+          <p>Summary:</p>
           <p>{{ movie_data.overview }}</p>
 
           <h4>Series</h4>
           {% for s in series %}
           <button class="modal-btn char-btn btn btn-primary" type="button"><a href="/series/{{s.seriesId}}">{{s.seriesName}}</a></button>
           {% endfor %}
+
+          </div>
 
           <h4>Awards</h4>
           <ul class="award-group">

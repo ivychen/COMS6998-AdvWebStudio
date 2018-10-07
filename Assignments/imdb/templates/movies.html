@@ -12,13 +12,22 @@
         <a href="/movie/{{ m.id }}"><img class="card-img-top" src={{ m.posterURL }} alt="Card image cap"></a>
       </div>
       <div class="card-header">
-        <h5 class="card-title">{{ m.title }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ m.year }}</h6>
+        <a href="/movie/{{ m.id }}"><h5 class="card-title">{{ m.title }}</h5></a>
+        <p class="card-subtitle mb-0 text-muted">{{ m.year }}</p>
+        {% if current_user.is_authenticated %}
+        <div class="card-body watched">
+          <!-- Watched movie form -->
+          <form action="/watched" method="POST">
+            <div class="form-group" hidden>
+              <label for="id">ID</label>
+              <input type="text" name="id" class="form-control-plaintext" id="id" aria-describedby="idHelp" value="{{ m.id }}" readonly>
+            </div>
+            <button type="submit" class="btn watched-btn"><i class="fas fa-check-square"></i><span>Mark Watched</span></button>
+          </form>
+          <!-- Watched movie form END -->
+        </div>
+        {% endif %}
       </div>
-      <!-- <div class="card-body">
-        <p class="card-text">{{ m.overview }}</p>
-        <a href="/movie/{{ m.id }}" class="btn btn-primary">MORE INFO</a>
-      </div> -->
     </div>
     {% endfor %}
   </div>

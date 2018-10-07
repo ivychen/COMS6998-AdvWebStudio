@@ -296,6 +296,26 @@ def delete():
 
     return redirect('/')
 
+@app.route('/watched', methods=['POST', 'GET'])
+def watched():
+    if request.method == "POST":
+        movieId = request.form['id']
+        watch = db.session.query(models.watchedMovies)\
+            .filter_by(username=current_user.username, movieId=movieId).one()
+
+        if watch:
+            statement = models.watchedMovies.delete()\
+                .where(db.and_(models.watchedMovies.c.username == current_user.username, models.watchedMovies.c.movieId == movieId))
+        else:
+            statement = models.watchedMovies.insert().values(username=current_user.username, movieId=movieId)
+
+        db.session.execute(statement)
+        db.session.commit()
+
+        return redirect(request.referrer or url_for('main'))
+
+    return redirect('/')
+
 # === LOGIN ====
 @login_manager.user_loader
 def load_user(username):

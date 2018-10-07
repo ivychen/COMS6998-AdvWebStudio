@@ -29,10 +29,24 @@ $BLUE: #3eaede;
     background-color: transparent;
     width: 13rem !important ;
     margin-right: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+
+    .card-header {
+      padding: 0;
+      padding-top: .5rem;
+
+      .card-subtitle {
+      }
+    }
+
+    .card-body.watched {
+      padding-top: 0;
+      padding-bottom: 0;
+      padding: 0;
+    }
 
     a {
-      color: #101415;
+      color: white;
       box-shadow: 4px 4px 16px 1px;
     }
   }
@@ -147,6 +161,12 @@ nav.navbar.navbar-expand-lg {
 .movie {
   display: inline-block;
   margin-bottom: 2rem;
+
+  .movie-heading.row {
+    padding: 0;
+    padding-left: 1rem;
+    display: inline-block;
+  }
 }
 
 .marigold {
@@ -154,8 +174,8 @@ nav.navbar.navbar-expand-lg {
 }
 
 .movie-poster {
-  max-width: 40%;
-  padding: 0 1rem 0 1rem;
+  max-width: 35%;
+  padding: 0 2rem 0 1rem;
 }
 
 .upper {
@@ -277,4 +297,28 @@ nav.navbar.navbar-expand-lg {
   vertical-align: middle;
   border-radius: 2px;
   margin-left: .5rem;
+}
+
+.watched-btn {
+  // position: absolute;
+  // right: -5%;
+  // top: -5%;
+  margin-bottom: 0;
+  padding: 0;
+  margin: 0;
+  margin-top: .5rem;
+  background: transparent;
+  // color: #ef2208;
+  border: 1px solid transparent;
+  color: #ffffff;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  span {
+    font-size: 1rem;
+    text-transform: uppercase;
+    margin-left: 1rem;
+  }
 }
