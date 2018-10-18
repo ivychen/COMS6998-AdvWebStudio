@@ -31,7 +31,9 @@
   <div class="row card-grid">
     {% for m in allMovies %}
     <div class="card">
-      <a href="/movie/{{ m.id }}"><img class="card-img-top" src={{ m.posterURL }} alt="Card image cap"></a>
+      <div class="card-movie-poster">
+        <a href="/movie/{{ m.id }}"><img class="card-img-top" src={{ m.posterURL }} alt="Card image cap"></a>
+      </div>
       <div class="card-header">
         <h5 class="card-title">{{ m.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ m.year }}</h6>

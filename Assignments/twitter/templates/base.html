@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}IMDB{% endblock %}</title>
+
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css"
+        href="{{url_for('static', filename='css/main.css')}}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"
+
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+  <script type=text/javascript>
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  </script>
+</head>
+
+<body>
+  <!-- Navigation Menu -->
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">twtr</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <!-- <li class="nav-item active">
+          <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
+        </li> -->
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="/addMovie">Add Movie</a>
+        </li> -->
+
+      <!-- <form class="form-search form-inline" action="/search" method="POST">
+        <div class="input-group mb-2 mr-sm-2">
+          <input type="text" class="form-control" name="searchTitle" id="inlineFormInputGroupUsername2" placeholder="Find movie genre or title or series name">
+          <div class="input-group-append">
+            <span class="oi" data-glyph="magnifying-glass"></span>
+
+              <button class="btn btn-search btn-outline-secondary border-left-0 border" type="submit">
+                SEARCH
+              </button>
+          </div>
+        </div>
+      </form> -->
+      <!-- <li class="nav-item active mr-auto">
+        <a class="nav-link" href="/movies">All Movies</a>
+      </li> -->
+      {% if current_user.is_authenticated %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ current_user.username }}
+          <div class="user-icon">{{ current_user.username[0].upper() }}</div>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+          <!-- <a class="dropdown-item" href="#">My Account</a> -->
+          <!-- <a class="dropdown-item" href="#">Another action</a> -->
+          <div class="dropdown-divider"></div>
+          <a class="nav-link" href="/logout"><button class="login btn btn-outline-success">Logout</button></a>
+        </div>
+      </li>
+      <li class="nav-item active">
+
+      </li>
+      {% else %}
+      <li class="nav-item active ml-auto">
+        <a class="nav-link" href="/login"><button class="login btn btn-outline-success">Login</button></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/register"><button class="register btn btn-outline-success">Register</button></a>
+      </li>
+      {% endif %}
+        <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li> -->
+      </ul>
+      <!-- <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form> -->
+    </div>
+  </nav>
+
+  <!-- Main content -->
+	<div class="container-fluid">
+		{% block body %}{% endblock %}
+	</div>
+
+  <footer class="footer">
+    <div class="footer-copyright">
+      <div class="container">
+        © 2018 Ivy Chen | COMS6998 Advanced Web Studio |
+        <a class="grey-text text-lighten-4 right" href="https://github.com/ivychen/COMS6998-AdvWebStudio">Github Project</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  </head>
+  <body>
+  <script type="text/javascript">
+  $(document).ready(function() {
+  	var socket = io.connect('http://127.0.0.1:5000');
+  	socket.on('connect', function() {
+  		console.log('User has connected!');
+  	});
+  	socket.on('message', function(msg) {
+  		$("#messages").append('<li>'+msg+'</li>');
+  		console.log('Received message');
+  	});
+  	$('#sendbutton').on('click', function() {
+  		socket.send($('#myMessage').val());
+  		$('#myMessage').val('');
+  	});
+  });
+  </script>
+</body>
+</html>

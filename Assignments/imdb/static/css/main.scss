@@ -253,11 +253,14 @@ nav.navbar.navbar-expand-lg {
 .card-movie-poster {
   max-height: 308.14px;
   overflow: hidden;
+  color: #101415;
+  box-shadow: 4px 4px 16px 1px;
 }
 
 .seriesCarousel {
   margin-left: 1rem;
   margin-right: 1rem;
+  display: inline-block;
 
   .carousel.slide.series {
     display: inline-block;

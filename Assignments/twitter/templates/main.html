@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %} twtr {% endblock %}
+
+{% block body %}
+  {% block content %}
+  <ul id="messages">
+    {% for msg in messages %}
+      <li>{{ msg.message }}</li>
+    {% endfor %}
+  </ul>
+  <input type="text" id="myMessage">
+  <button id="sendbutton">Send</button>
+  {% endblock %}
+{% endblock %}
