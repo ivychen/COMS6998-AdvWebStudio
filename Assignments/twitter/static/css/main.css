@@ -1,23 +1,24 @@
 .navbar-nav {
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  justify-content: flex-end;
 }
 
-nav.navbar.navbar-expand-lg .navbar-brand {
+nav.navbar.navbar-expand-sm .navbar-brand {
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.5rem !important;
   height: 46px;
   margin-left: 1rem;
   border-bottom: 2px solid #00aced;
   margin-bottom: .5rem;
 }
 
-nav.navbar.navbar-expand-lg .navbar-toggler {
+nav.navbar.navbar-expand-sm .navbar-toggler {
   border-color: #00aced;
 }
 
-nav.navbar.navbar-expand-lg .navbar-toggler .navbar-toggler-icon {
+nav.navbar.navbar-expand-sm .navbar-toggler .navbar-toggler-icon {
   color: #00aced;
   font-size: 1rem;
   line-height: 1.5rem;
@@ -25,15 +26,15 @@ nav.navbar.navbar-expand-lg .navbar-toggler .navbar-toggler-icon {
   height: inherit;
 }
 
-nav.navbar.navbar-expand-lg .dropdown-menu .dropdown-divider {
+nav.navbar.navbar-expand-sm .dropdown-menu .dropdown-divider {
   border-top: 2px solid #00aced;
 }
 
-nav.navbar.navbar-expand-lg .dropdown-menu .btn {
+nav.navbar.navbar-expand-sm .dropdown-menu .btn {
   width: 100%;
 }
 
-nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
+nav.navbar.navbar-expand-sm a, nav.navbar.navbar-expand-sm li {
   color: #00aced !important;
 }
 
@@ -48,6 +49,7 @@ nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
   vertical-align: middle;
   border-radius: 2px;
   margin-left: .5rem;
+  color: white;
 }
 
 body > .container-fluid {
@@ -68,7 +70,7 @@ body > .container-fluid .row {
 body > .container-fluid .header.row {
   padding: .25rem 2rem .25rem 2rem;
   margin-bottom: 1rem;
-  background-color: #fec52e;
+  background-color: #c0deed;
   color: #21292c;
 }
 

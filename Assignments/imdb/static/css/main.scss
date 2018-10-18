@@ -120,13 +120,13 @@ body > .container-fluid {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
   }
-
 }
 
 .navbar-nav {
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 nav.navbar.navbar-expand-lg {

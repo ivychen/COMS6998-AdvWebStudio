@@ -50,10 +50,7 @@ def authenticated_only(f):
 # Define routes
 @app.route('/', methods=['POST', 'GET'])
 def main():
-    if current_user.is_authenticated:
-        messages = models.History.query.all()
-    else:
-        messages = []
+    messages = models.History.query.all()
 
     return render_template('main.html', messages=messages)
 
@@ -109,7 +106,6 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('main'))
-
 
 # Sockets
 # @socketio.on('connect')

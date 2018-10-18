@@ -5,11 +5,27 @@
   {% block content %}
     <ul id="messages">
       {% for msg in messages %}
-        <li><a href="/messages/{{ msg.sender }}">{{ msg.sender }}</a> [{{ msg.timestamp }}]: {{ msg.message }}</li>
+        <li>
+          <a href="/messages/{{ msg.sender }}">{{ msg.sender }}</a> [{{ msg.timestamp }}]: {{ msg.message }}
+          <p><button data-username="{{ msg.sender }}" data-id="{{ msg.id }}" data-message="{{ msg.message }}" class="btn btn-outline-secondary reply">Reply</button></p>
+        </li>
       {% endfor %}
     </ul>
-    <input type="text" id="myMessage">
-    <input type="text" value="{{current_user.username}}" id="sender" hidden>
-    <button type="submit" id="sendbutton">Send</button>
+    {% if current_user.is_authenticated %}
+    <div class="msgSender">
+      <h5>Send to All</h5>
+      <input type="text" id="myMessage">
+      <input type="text" value="{{current_user.username}}" id="sender" hidden>
+      <button type="submit" id="sendbutton">Send</button>
+    </div>
+
+    <div class="replySender">
+      <h5>Reply</h5>
+      <h6 id="to"></h6>
+      <input type="text" id="replyto" hidden>
+      <input type="text" id="myReply">
+      <button type="submit" id="replyButton">Send</button>
+    </div>
+    {% endif %}
   {% endblock %}
 {% endblock %}
