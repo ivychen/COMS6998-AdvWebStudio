@@ -5,7 +5,7 @@
   {% block content %}
     <ul id="messages">
       {% for msg in messages %}
-        <li>{{ msg.sender }} [{{ msg.timestamp }}]: {{ msg.message }}</li>
+        <li><a href="/messages/{{ msg.sender }}">{{ msg.sender }}</a> [{{ msg.timestamp }}]: {{ msg.message }}</li>
       {% endfor %}
     </ul>
     <input type="text" id="myMessage">

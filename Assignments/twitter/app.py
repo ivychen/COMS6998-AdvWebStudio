@@ -2,7 +2,7 @@ from flask import Flask, g, render_template, request, jsonify, session, url_for,
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from wtforms import Form, BooleanField, StringField, TextField, PasswordField, validators
 from flask_socketio import SocketIO, send, disconnect
-from flask_session import Session
+# from flask_session import Session
 
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
@@ -18,7 +18,7 @@ app.config.from_object(Config)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-Session(app)
+# Session(app)
 db = SQLAlchemy(app)
 socketio = SocketIO(app, manage_session=False)
 import models

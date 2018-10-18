@@ -27,10 +27,10 @@
 
 <body>
   <!-- Navigation Menu -->
-  <nav class="navbar navbar-expand-lg">
+  <nav class="navbar navbar-expand-sm">
     <a class="navbar-brand" href="/">twtr</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon">MENU</span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -71,7 +71,7 @@
         </div>
       </li>
       <li class="nav-item active">
-
+        <a class="nav-link" href="/messages/{{ current_user.username }}">My Messages</a>
       </li>
       {% else %}
       <li class="nav-item active ml-auto">
@@ -116,28 +116,6 @@
       </div>
     </div>
   </footer>
-  <script type="text/javascript">
-  $(document).ready(function() {
-    var socket = io.connect('http://127.0.0.1:5000');
-    socket.on('connect', function() {
-      console.log('User has connected!');
-    });
-    socket.on('message', function(msg) {
-      $("#messages").append('<li>'+ msg.sender + " [" + msg.timestamp + "]: " + msg.message+'</li>');
-      console.log('Received message');
-    });
-    $('#sendbutton').on('click', function() {
-      let payload = {
-        "message": $('#myMessage').val(),
-        "timestamp": new Date(),
-        "sender": $('#sender').val(),
-        "replyto": "",
-      }
-      socket.emit('message', payload);
-      $('#myMessage').val('');
-    });
-  });
-  </script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   </head>

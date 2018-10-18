@@ -1,0 +1,96 @@
+.navbar-nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+nav.navbar.navbar-expand-lg .navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+  height: 46px;
+  margin-left: 1rem;
+  border-bottom: 2px solid #00aced;
+  margin-bottom: .5rem;
+}
+
+nav.navbar.navbar-expand-lg .navbar-toggler {
+  border-color: #00aced;
+}
+
+nav.navbar.navbar-expand-lg .navbar-toggler .navbar-toggler-icon {
+  color: #00aced;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  width: inherit;
+  height: inherit;
+}
+
+nav.navbar.navbar-expand-lg .dropdown-menu .dropdown-divider {
+  border-top: 2px solid #00aced;
+}
+
+nav.navbar.navbar-expand-lg .dropdown-menu .btn {
+  width: 100%;
+}
+
+nav.navbar.navbar-expand-lg a, nav.navbar.navbar-expand-lg li {
+  color: #00aced !important;
+}
+
+.user-icon {
+  display: inline-flex;
+  align-items: center;
+  font-weight: bold;
+  justify-content: center;
+  background-color: #00aced;
+  height: 32px;
+  width: 32px;
+  vertical-align: middle;
+  border-radius: 2px;
+  margin-left: .5rem;
+}
+
+body > .container-fluid {
+  margin-top: 0 !important;
+}
+
+body > .container-fluid {
+  color: #21292c;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+body > .container-fluid .row {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+body > .container-fluid .header.row {
+  padding: .25rem 2rem .25rem 2rem;
+  margin-bottom: 1rem;
+  background-color: #fec52e;
+  color: #21292c;
+}
+
+body > .container-fluid .subheader {
+  margin-bottom: .5rem;
+  color: #eeedf0;
+}
+
+body > .container-fluid .subheader a, body > .container-fluid .subheader p {
+  color: #eeedf0;
+}
+
+body > .container-fluid .inner-container {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.footer {
+  color: #21292c;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  line-height: 60px;
+  background-color: #c0deed;
+}
