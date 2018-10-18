@@ -3,12 +3,13 @@
 
 {% block body %}
   {% block content %}
-  <ul id="messages">
-    {% for msg in messages %}
-      <li>{{ msg.message }}</li>
-    {% endfor %}
-  </ul>
-  <input type="text" id="myMessage">
-  <button id="sendbutton">Send</button>
+    <ul id="messages">
+      {% for msg in messages %}
+        <li>{{ msg.sender }} [{{ msg.timestamp }}]: {{ msg.message }}</li>
+      {% endfor %}
+    </ul>
+    <input type="text" id="myMessage">
+    <input type="text" value="{{current_user.username}}" id="sender" hidden>
+    <button type="submit" id="sendbutton">Send</button>
   {% endblock %}
 {% endblock %}

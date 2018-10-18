@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="utf-8">
-  <title>{% block title %}IMDB{% endblock %}</title>
+  <title>{% block title %}twtr{% endblock %}</title>
 
   <!-- FONTS -->
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
@@ -105,7 +105,7 @@
 
   <!-- Main content -->
 	<div class="container-fluid">
-		{% block body %}{% endblock %}
+    {% block body %}{% endblock %}
 	</div>
 
   <footer class="footer">
@@ -116,26 +116,31 @@
       </div>
     </div>
   </footer>
-
+  <script type="text/javascript">
+  $(document).ready(function() {
+    var socket = io.connect('http://127.0.0.1:5000');
+    socket.on('connect', function() {
+      console.log('User has connected!');
+    });
+    socket.on('message', function(msg) {
+      $("#messages").append('<li>'+ msg.sender + " [" + msg.timestamp + "]: " + msg.message+'</li>');
+      console.log('Received message');
+    });
+    $('#sendbutton').on('click', function() {
+      let payload = {
+        "message": $('#myMessage').val(),
+        "timestamp": new Date(),
+        "sender": $('#sender').val(),
+        "replyto": "",
+      }
+      socket.emit('message', payload);
+      $('#myMessage').val('');
+    });
+  });
+  </script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   </head>
   <body>
-  <script type="text/javascript">
-  $(document).ready(function() {
-  	var socket = io.connect('http://127.0.0.1:5000');
-  	socket.on('connect', function() {
-  		console.log('User has connected!');
-  	});
-  	socket.on('message', function(msg) {
-  		$("#messages").append('<li>'+msg+'</li>');
-  		console.log('Received message');
-  	});
-  	$('#sendbutton').on('click', function() {
-  		socket.send($('#myMessage').val());
-  		$('#myMessage').val('');
-  	});
-  });
-  </script>
 </body>
 </html>
