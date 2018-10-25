@@ -3,9 +3,9 @@
 
 {% block body %}
   {% block content %}
-  <ul id="messages">
+  <ul id="messages" class="messages-container">
     {% for msg in messages %}
-      <li>{{ msg.sender }} [{{ msg.timestamp }}]: {{ msg.message }}</li>
+      <li class="message-item">{{ msg.sender }} [{{ msg.timestamp }}]: {{ msg.message }}</li>
     {% endfor %}
   </ul>
   <!-- <input type="text" id="myMessage">

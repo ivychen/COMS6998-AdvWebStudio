@@ -8,6 +8,7 @@ $BLUE: #00aced;
 $BLUE-VERIFIED: #1dcaff;
 $BLUE-DARK: #0084b4;
 $BLUE-BABY: #c0deed;
+$GREY: #657786;
 
 .navbar-nav {
   width: 100%;
@@ -116,4 +117,9 @@ body > .container-fluid {
   line-height: 60px;
   // background-color: #f5f5f5;
   background-color: $BLUE-BABY;
+}
+
+.reply-tag {
+  display: block;
+  color: $GREY;
 }

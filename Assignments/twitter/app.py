@@ -50,15 +50,25 @@ def authenticated_only(f):
 # Define routes
 @app.route('/', methods=['POST', 'GET'])
 def main():
-    messages = models.History.query.all()
+    page = request.args.get('page', 1, type=int)
+    messages = models.History.query.order_by(models.History.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('main', page=messages.next_num) \
+        if messages.has_next else None
+    prev_url = url_for('main', page=messages.prev_num) \
+        if messages.has_prev else None
 
-    return render_template('main.html', messages=messages)
+    return render_template('main.html', messages=messages.items, next_url=next_url, prev_url=prev_url)
 
 @app.route('/messages/<username>', methods=['POST', 'GET'])
 # @login_required
 def messages(username):
-    messages = models.History.query.filter_by(sender=username).all()
-    return render_template('messages.html', messages=messages)
+    page = request.args.get('page', 1, type=int)
+    messages = models.History.query.filter_by(sender=username).order_by(models.History.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('messages', username=username, page=messages.next_num) \
+        if messages.has_next else None
+    prev_url = url_for('messages', username=username, page=messages.prev_num) \
+        if messages.has_prev else None
+    return render_template('messages.html', messages=messages.items, next_url=next_url, prev_url=prev_url)
 
 # === LOGIN ====
 @login_manager.user_loader
@@ -126,8 +136,6 @@ def handleMessage(msg):
     db.session.add(message)
     db.session.commit()
     send(msg, broadcast=True)
-
-
 
 if __name__ == '__main__':
 	socketio.run(app)

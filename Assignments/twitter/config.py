@@ -7,3 +7,4 @@ class Config(object):
     SQLALCHEMY_ECHO = True
     SESSION_TYPE = 'filesystem'
     SECRET_KEY = 'chat'
+    POSTS_PER_PAGE = 8

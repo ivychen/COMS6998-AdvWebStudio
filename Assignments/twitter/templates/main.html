@@ -3,10 +3,15 @@
 
 {% block body %}
   {% block content %}
-    <ul id="messages">
+    <ul id="messages" class="messages-container">
       {% for msg in messages %}
-        <li>
-          <a href="/messages/{{ msg.sender }}">{{ msg.sender }}</a> [{{ msg.timestamp }}]: {{ msg.message }}
+        <li class="message-item">
+          <a href="/messages/{{ msg.sender }}">{{ msg.sender }}</a>
+          [{{ msg.timestamp }}]
+          {% if msg.replyto != "" %}
+          <span class="reply-tag">Replying to {{ msg.replyto }}</span>
+          {% endif %}
+          {{ msg.message }}
           <p><button data-username="{{ msg.sender }}" data-id="{{ msg.id }}" data-message="{{ msg.message }}" class="btn btn-outline-secondary reply">Reply</button></p>
         </li>
       {% endfor %}

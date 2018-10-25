@@ -1,10 +1,16 @@
 from app import db, login_manager
 from flask_login import UserMixin
 
+collects = db.Table('collects',
+    db.Column('listId', db.Integer, db.ForeignKey('list.id'), primary_key=True),
+    db.Column('msgId', db.Integer, db.ForeignKey('history.id'), primary_key=True)
+)
+
 class User(UserMixin, db.Model):
     username = db.Column(db.String(140), primary_key=True)
     password = db.Column(db.String(140))
     email = db.Column(db.Text, unique=True)
+    lists = db.relationship('List', backref='user', lazy=True)
 
     def __init__(self , username ,password , email):
         self.username = username
@@ -32,3 +38,11 @@ class History(db.Model):
     sender = db.Column('sender', db.String(140))
     replyto = db.Column('replyto', db.String(140))
     message = db.Column('message', db.String(300))
+
+class List(db.Model):
+    id = db.Column('id', db.Integer, primary_key=True)
+    title = db.Column('title', db.String(256), nullable=False)
+
+    # Owner of list
+    owner = db.Column(db.Integer, db.ForeignKey('user.username', ondelete='CASCADE'), nullable=False)
+    messages = db.relationship('Messages', secondary=collects, lazy='subquery', backref=db.backref('lists', lazy=True))

@@ -96,3 +96,8 @@ body > .container-fluid .inner-container {
   line-height: 60px;
   background-color: #c0deed;
 }
+
+.reply-tag {
+  display: block;
+  color: #657786;
+}
