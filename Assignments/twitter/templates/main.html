@@ -8,11 +8,19 @@
         <li class="message-item">
           <a href="/messages/{{ msg.sender }}">{{ msg.sender }}</a>
           [{{ msg.timestamp }}]
+
           {% if msg.replyto != "" %}
           <span class="reply-tag">Replying to {{ msg.replyto }}</span>
           {% endif %}
+
           {{ msg.message }}
-          <p><button data-username="{{ msg.sender }}" data-id="{{ msg.id }}" data-message="{{ msg.message }}" class="btn btn-outline-secondary reply">Reply</button></p>
+
+          <p>
+            <button data-username="{{ msg.sender }}" data-id="{{ msg.id }}" data-message="{{ msg.message }}" class="btn btn-outline-secondary reply">Reply</button>
+            {% if current_user.is_authenticated %}
+            <button data-id="{{ msg.id }}" class="btn btn-outline-secondary save">Save</button>
+            {% endif %}
+          </p>
         </li>
       {% endfor %}
     </ul>

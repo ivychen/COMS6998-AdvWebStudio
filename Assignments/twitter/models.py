@@ -3,7 +3,7 @@ from flask_login import UserMixin
 
 collects = db.Table('collects',
     db.Column('listId', db.Integer, db.ForeignKey('list.id'), primary_key=True),
-    db.Column('msgId', db.Integer, db.ForeignKey('history.id'), primary_key=True)
+    db.Column('msgId', db.Integer, db.ForeignKey('message.id'), primary_key=True)
 )
 
 class User(UserMixin, db.Model):
@@ -32,7 +32,7 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return "<User {} {}".format(self.username, self.email)
 
-class History(db.Model):
+class Message(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime)
     sender = db.Column('sender', db.String(140))
@@ -45,4 +45,4 @@ class List(db.Model):
 
     # Owner of list
     owner = db.Column(db.Integer, db.ForeignKey('user.username', ondelete='CASCADE'), nullable=False)
-    messages = db.relationship('Messages', secondary=collects, lazy='subquery', backref=db.backref('lists', lazy=True))
+    messages = db.relationship('Message', secondary=collects, lazy='subquery', backref=db.backref('list', lazy=True))

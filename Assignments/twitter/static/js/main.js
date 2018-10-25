@@ -51,4 +51,17 @@ $(document).ready(function() {
     prefill: true,
   });
 
+  // Save message to user's personal list
+  $('#messages').on('click', ".save", function(e) {
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    let messageId = $(this).attr('data-id');
+    let payload = {
+      "messageId": messageId,
+      "user": $('#sender').val(),
+    }
+    console.log(payload);
+    socket.emit('save', payload);
+  });
+
 });

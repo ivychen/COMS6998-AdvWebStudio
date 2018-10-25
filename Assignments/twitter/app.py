@@ -51,7 +51,7 @@ def authenticated_only(f):
 @app.route('/', methods=['POST', 'GET'])
 def main():
     page = request.args.get('page', 1, type=int)
-    messages = models.History.query.order_by(models.History.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+    messages = models.Message.query.order_by(models.Message.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
     next_url = url_for('main', page=messages.next_num) \
         if messages.has_next else None
     prev_url = url_for('main', page=messages.prev_num) \
@@ -63,12 +63,32 @@ def main():
 # @login_required
 def messages(username):
     page = request.args.get('page', 1, type=int)
-    messages = models.History.query.filter_by(sender=username).order_by(models.History.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+    messages = models.Message.query.filter_by(sender=username).order_by(models.Message.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
     next_url = url_for('messages', username=username, page=messages.next_num) \
         if messages.has_next else None
     prev_url = url_for('messages', username=username, page=messages.prev_num) \
         if messages.has_prev else None
     return render_template('messages.html', messages=messages.items, next_url=next_url, prev_url=prev_url)
+
+@app.route('/saved', methods=['POST', 'GET'])
+# @login_required
+def saved():
+    page = request.args.get('page', 1, type=int)
+    listId = models.List.query.filter_by(owner=current_user.username).first()
+    # saved = models.List.query.filter_by(owner=current_user.username).first().messages
+
+    messages = db.session.query(models.Message)\
+        .join(models.collects)\
+        .filter_by(listId=listId.id)\
+        .order_by(models.Message.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+    print(messages)
+
+    next_url = url_for('saved', page=messages.next_num) \
+        if messages.has_next else None
+    prev_url = url_for('saved', page=messages.prev_num) \
+        if messages.has_prev else None
+    return render_template('saved.html', messages=messages.items, next_url=next_url, prev_url=prev_url)
+
 
 # === LOGIN ====
 @login_manager.user_loader
@@ -104,7 +124,10 @@ def register():
         if exist:
             error = "Username is taken."
         else:
+            # Create user and saved msg list
             user = models.User(username=request.form['username'].lower(), password=request.form['password'], email=request.form['email'])
+            savedList = models.List(title="Saved Messages")
+            user.lists.append(savedList)
             db.session.add(user)
             db.session.commit()
             login_user(user, remember=True)
@@ -130,12 +153,21 @@ def logout():
 
 @socketio.on('message')
 def handleMessage(msg):
-    print('Message: ' + msg['message'])
     time = dt.parse(msg['timestamp'])
-    message = models.History(message=msg['message'], timestamp=time, sender=msg['sender'], replyto=msg['replyto'])
+    message = models.Message(message=msg['message'], timestamp=time, sender=msg['sender'], replyto=msg['replyto'])
     db.session.add(message)
     db.session.commit()
     send(msg, broadcast=True)
+
+@socketio.on('save')
+def handleSave(msg):
+    ls = models.List.query.filter_by(owner=msg['user']).first()
+    savedMsg = models.Message.query.get(msg['messageId'])
+
+    statement = models.collects.insert().values(listId=ls.id, msgId=msg['messageId'])
+    db.session.execute(statement)
+    db.session.commit()
+    # send(msg, broadcast=True)
 
 if __name__ == '__main__':
 	socketio.run(app)
