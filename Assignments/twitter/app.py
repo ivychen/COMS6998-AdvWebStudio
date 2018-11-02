@@ -76,12 +76,11 @@ def saved():
     page = request.args.get('page', 1, type=int)
     listId = models.List.query.filter_by(owner=current_user.username).first()
     # saved = models.List.query.filter_by(owner=current_user.username).first().messages
-
+    print(current_user.username)
     messages = db.session.query(models.Message)\
         .join(models.collects)\
         .filter_by(listId=listId.id)\
         .order_by(models.Message.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
-    print(messages)
 
     next_url = url_for('saved', page=messages.next_num) \
         if messages.has_next else None
