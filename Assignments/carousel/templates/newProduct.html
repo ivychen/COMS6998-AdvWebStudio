@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}New Product{% endblock %}
+{% block body %}
+  {% block content %}
+
+  <div class="row">
+    <h3>Add Product</h3>
+  </div>
+
+  <div class="inner-container container-fluid">
+    <form>
+      <div class="form-group">
+        <label for="brand">Brand</label>
+        <input type="brand" class="form-control" id="brand" placeholder="" name="brand">
+      </div>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="name" class="form-control" id="name" placeholder="" name="name">
+      </div>
+
+      <div class="form-group">
+        <label for="imgsrc">Image URL</label>
+        <input type="imgsrc" class="form-control" id="imgsrc" placeholder="" name="imgsrc">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" rows="3" name="description"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary mb-2">Add Product</button>
+    </form>
+  </div>
+
+  {% endblock %}
+{% endblock %}

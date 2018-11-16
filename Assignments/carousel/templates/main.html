@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %} carousel {% endblock %}
+
+{% block body %}
+  {% block content %}
+
+  <div class="jumbotron jumbotron-fluid">
+  {% if not current_user.is_authenticated %}
+    <div class="container">
+      <h1 class="display-4">Track your skincare routine.</h1>
+      <p class="lead">Track your skincare routine. Browse products below or add your own.</p>
+    </div>
+  {% endif %}
+
+  {% if current_user.is_authenticated %}
+  <div class="row">
+    <button type="button" class="btn btn-primary btn-lg">Create New Routine</button>
+  </div>
+
+  <div class="board">
+    <div class="board-column todo">
+      <div class="board-column-header">New Routine</div>
+      <div class="board-column-content">
+        <div class="board-item"><div class="board-item-content"><span>Item #</span>1</div></div>
+        <div class="board-item"><div class="board-item-content"><span>Item #</span>2</div></div>
+        <div class="board-item"><div class="board-item-content"><span>Item #</span>3</div></div>
+        <div class="board-item"><div class="board-item-content"><span>Item #</span>4</div></div>
+        <div class="board-item"><div class="board-item-content"><span>Item #</span>5</div></div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  </div>
+
+  <div class="row">
+    <h3>Products</h3>
+  </div>
+
+  <ul id="products" class="main product-container card-grid">
+    {% for product in products %}
+      <li class="product-item">
+        <div class="card" style="width: 10rem;">
+          <a href="/product/{{ product.id }}"><img class="card-img-top" src="{{ product.imgsrc }}" alt="Card image cap"></a>
+          <div class="card-body">
+            <p class="card-text">{{ product.brand }}</p>
+            <h5 class="card-title"><a href="/product/{{ product.id }}">{{ product.name }}</a></h5>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  {% endblock %}
+{% endblock %}
