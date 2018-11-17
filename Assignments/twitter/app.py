@@ -1,6 +1,5 @@
 from flask import Flask, g, render_template, request, jsonify, session, url_for, redirect, Response
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
-from wtforms import Form, BooleanField, StringField, TextField, PasswordField, validators
 from flask_socketio import SocketIO, send, disconnect
 # from flask_session import Session
 
@@ -24,18 +23,18 @@ socketio = SocketIO(app, manage_session=False)
 import models
 
 # FORMS
-class UserLoginForm(Form):
-    username = TextField('Username', [validators.Required(), validators.Length(min=4, max=25)])
-    password = PasswordField('Password', [validators.Required(), validators.Length(min=6, max=200)])
-    email = TextField('Email Address', [validators.Required(), validators.Length(min=4, max=25)])
-
-class RegistrationForm(Form):
-    username = StringField('Username', [validators.Length(min=4, max=25)])
-    email = StringField('Email Address', [validators.Length(min=6, max=35)])
-    password = PasswordField('Password', [
-        validators.DataRequired()
-        # validators.EqualTo('confirm', message='Passwords must match')
-    ])
+# class UserLoginForm(Form):
+#     username = TextField('Username', [validators.Required(), validators.Length(min=4, max=25)])
+#     password = PasswordField('Password', [validators.Required(), validators.Length(min=6, max=200)])
+#     email = TextField('Email Address', [validators.Required(), validators.Length(min=4, max=25)])
+#
+# class RegistrationForm(Form):
+#     username = StringField('Username', [validators.Length(min=4, max=25)])
+#     email = StringField('Email Address', [validators.Length(min=6, max=35)])
+#     password = PasswordField('Password', [
+#         validators.DataRequired()
+#         # validators.EqualTo('confirm', message='Passwords must match')
+#     ])
 
 # Aux
 def authenticated_only(f):
@@ -102,7 +101,6 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('main'))
 
-    form = UserLoginForm(request.form)
     error = None
     if request.method == 'POST':
         user = models.User.query.filter_by(username=request.form['username'].lower(), password=request.form['password']).first()
@@ -112,11 +110,10 @@ def login():
             return redirect(url_for('main'))
         else:
             error = 'Invalid username or password.'
-    return render_template('login.html', form=form, error=error)
+    return render_template('login.html', error=error)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm(request.form)
     error = None
     if request.method == 'POST':
         exist = models.User.query.filter_by(username=request.form['username'].lower()).first()
@@ -131,7 +128,7 @@ def register():
             db.session.commit()
             login_user(user, remember=True)
             return redirect(url_for('login'))
-    return render_template('register.html', form=form, error=error)
+    return render_template('register.html', error=error)
 
 @app.route('/logout')
 @login_required
