@@ -1,4 +1,4 @@
-from app import db, login_manager
+from config import db, login_manager
 from flask_login import UserMixin
 
 collects = db.Table('collects',
@@ -6,11 +6,20 @@ collects = db.Table('collects',
     db.Column('productId', db.Integer, db.ForeignKey('product.id'), primary_key=True)
 )
 
-owns = db.Table('owns',
-    db.Column('username', db.String(140), db.ForeignKey('user.username'), primary_key=True),
-    db.Column('productId', db.Integer, db.ForeignKey('product.id'), primary_key=True),
-    db.Column('quantity', db.Integer)
-)
+# owns = db.Table('owns',
+#     db.Column('username', db.String(140), db.ForeignKey('user.username'), primary_key=True),
+#     db.Column('productId', db.Integer, db.ForeignKey('product.id'), primary_key=True),
+#     db.Column('quantity', db.Integer)
+# )
+
+class User_own_product(db.Model):
+    __tablename__= 'user_own_product'
+    username = db.Column(db.String(140), db.ForeignKey('user.username'), primary_key=True)
+    productId = db.Column(db.Integer, db.ForeignKey('product.id'), primary_key=True)
+    quantity = db.Column(db.Integer)
+
+    user = db.relationship('User', back_populates="products")
+    product = db.relationship('Product', back_populates="users")
 
 tags = db.Table('tags',
     db.Column('tag', db.Integer, db.ForeignKey('tag.tag'), primary_key=True),
@@ -28,7 +37,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.Text, unique=True)
     skinType = db.Column(db.String(140))
     lists = db.relationship('List', backref='user', lazy=True)
-    products = db.relationship('Product', secondary=owns, lazy='subquery', backref=db.backref('users', lazy=True))
+    # products = db.relationship('Product', secondary=owns, lazy='subquery', backref=db.backref('users', lazy=True))
+    products = db.relationship("User_own_product", back_populates="user")
 
     def __init__(self , username ,password , email):
         self.username = username
@@ -60,6 +70,8 @@ class Product(db.Model):
     category = db.Column(db.String(200))
 
     tags = db.relationship('Tag', secondary=tags, lazy='subquery', backref=db.backref('products', lazy=True))
+
+    users = db.relationship("User_own_product", back_populates="product")
 
 class Tag(db.Model):
     tag = db.Column(db.String(140), primary_key=True)

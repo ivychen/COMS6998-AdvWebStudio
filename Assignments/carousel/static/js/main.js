@@ -64,6 +64,33 @@ $(document).ready(function() {
     socket.emit('save', payload);
   });
 
+  // Autocomplete for form inputs
+  $(function() {
+    $.ajax({
+      type: "POST",
+      headers: {"Content-Type": "application/json"},
+      url: '/autocomplete',
+    }).done(function (data) {
+      $('#autocomplete').autocomplete({
+        source: data.matching_results,
+        minLength: 2
+      });
+    });
+  });
+
+  $(function() {
+    $.ajax({
+      type: "POST",
+      headers: {"Content-Type": "application/json"},
+      url: '/autocomplete_category',
+    }).done(function (data) {
+      $('#category').autocomplete({
+        source: data.matching_results,
+        minLength: 2
+      });
+    });
+  });
+
   // === MUURI
   var itemContainers = [].slice.call(document.querySelectorAll('.board-column-content'));
   var columnGrids = [];
