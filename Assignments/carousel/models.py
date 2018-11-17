@@ -17,11 +17,6 @@ tags = db.Table('tags',
     db.Column('productId', db.Integer, db.ForeignKey('product.id'), primary_key=True)
 )
 
-categories = db.Table('categories',
-    db.Column('category', db.Integer, db.ForeignKey('category.category'), primary_key=True),
-    db.Column('productId', db.Integer, db.ForeignKey('product.id'), primary_key=True)
-)
-
 concerns = db.Table('concerns',
     db.Column('concernId', db.Integer, db.ForeignKey('concern.concern'), primary_key=True),
     db.Column('username', db.Integer, db.ForeignKey('user.username'), primary_key=True)
@@ -62,14 +57,9 @@ class Product(db.Model):
     name = db.Column('name', db.Text)
     description = db.Column('description', db.Text)
     imgsrc = db.Column(db.Text)
-
-    categories = db.relationship('Category', secondary=categories, lazy='subquery', backref=db.backref('products', lazy=True))
+    category = db.Column(db.String(200))
 
     tags = db.relationship('Tag', secondary=tags, lazy='subquery', backref=db.backref('products', lazy=True))
-
-
-class Category(db.Model):
-    category = db.Column(db.String(200), primary_key=True)
 
 class Tag(db.Model):
     tag = db.Column(db.String(140), primary_key=True)

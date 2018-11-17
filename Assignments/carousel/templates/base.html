@@ -11,6 +11,7 @@
   <!-- Stylesheets -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.css.map" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css"
         href="{{url_for('static', filename='css/main.css')}}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"
@@ -37,18 +38,14 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <!-- Searh bar -->
-        <form class="form-search form-inline" action="/search" method="POST">
-          <div class="input-group mb-2 mr-sm-2">
-            <!-- <div class="input-group-prepend">
-              <div class="input-group-text"></div>
-            </div> -->
-            <input type="text" class="form-control" name="query" id="inlineFormInputGroupUsername2" placeholder="Search for product name">
+        <!-- Search form -->
+        <form class="form-search form-inline form-search-bar" action="/search" method="POST">
+          <div class="input-group">
+            <input type="text" class="form-control" name="query" id="query" placeholder="Search products and brands">
             <div class="input-group-append">
-              <span class="oi" data-glyph="magnifying-glass"></span>
-
-                <button class="btn btn-search btn-outline-secondary border-left-0 border" type="submit">
-                  SEARCH
-                </button>
+              <button class="btn btn-secondary" type="button">
+                <i class="fa fa-search"></i>
+              </button>
             </div>
           </div>
         </form>
@@ -141,6 +138,7 @@
   <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
   <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
   <script src="https://unpkg.com/muuri@0.7.1/dist/muuri.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </head>
   <body>

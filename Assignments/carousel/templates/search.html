@@ -6,18 +6,27 @@
     <h2>Search Results: {{ search }}</h2>
   </div>
 
-  <ul id="products" class="product-container card-grid">
-    {% for product in products %}
-      <li class="product-item">
-        <div class="card" style="width: 10rem;">
-          <a href="/product/{{ product.id }}"><img class="card-img-top" src="{{ product.imgsrc }}" alt="Card image cap"></a>
-          <div class="card-body">
-            <p class="card-text">{{ product.brand }}</p>
-            <h5 class="card-title"><a href="/product/{{ product.id }}">{{ product.name }}</a></h5>
+  <div class="jumbotron jumbotron-fluid jumbotron-psa">
+    <div class="row">
+      <p class="lead lead-inline">Can't find a product?</p>
+      <a class="btn btn-primary" href="/newProduct" role="button">Add a New Product</a>
+    </div>
+  </div>
+
+  <div class="inner-container">
+    <ul id="products" class="product-container card-grid">
+      {% for product in products %}
+        <li class="product-item">
+          <div class="card" style="width: 10rem;">
+            <a href="/product/{{ product.id }}"><img class="card-img-top" src="{{ product.imgsrc }}" alt="Card image cap"></a>
+            <div class="card-body">
+              <p class="card-text">{{ product.brand }}</p>
+              <h5 class="card-title"><a href="/product/{{ product.id }}">{{ product.name }}</a></h5>
+            </div>
           </div>
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
+        </li>
+        {% endfor %}
+      </ul>
+  </div>
   {% endblock %}
 {% endblock %}
