@@ -40,7 +40,7 @@ def products(username):
     user = aliased(models.User)
     products = db.session.query(models.User_own_product, models.Product).join(models.Product).join(user, models.User).filter(user.username==username).all()
 
-    return render_template('shelf.html', products=products, username=username)
+    return render_template('shelf.html', products=products, username=username, float=float)
 
 @app.route('/product/<id>', methods=['POST', 'GET'])
 def product(id):
