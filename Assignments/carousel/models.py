@@ -17,6 +17,7 @@ class User_own_product(db.Model):
     username = db.Column(db.String(140), db.ForeignKey('user.username'), primary_key=True)
     productId = db.Column(db.Integer, db.ForeignKey('product.id'), primary_key=True)
     quantity = db.Column(db.Integer)
+    rating = db.Column(db.Integer)
 
     user = db.relationship('User', back_populates="products")
     product = db.relationship('Product', back_populates="users")

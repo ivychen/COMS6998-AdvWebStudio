@@ -15,11 +15,10 @@ function format ( id ) {
         let prod = product.result[0];
         console.log(prod);
         div
-            .html('<div><a href="/product/' + prod.id + '"><img class="card-img-top" src="' + prod.imgsrc + '" alt="Card image cap"></a></div>')
+            .html('<div><div class="card" style="width: 10rem;"><a href="/product/' + prod.id + '"><img class="card-img-top" src="' + prod.imgsrc + '" alt="Card image cap"></a></div></div>')
             .removeClass( 'loading' );
       }
-  } );
-
+  });
   return div;
 }
 
@@ -176,8 +175,75 @@ $(document).ready(function() {
   // === DataTables ===
   var table = $('#myShelf').DataTable({
     paging: true,
-    order: [[ 1, "asc" ]]
+    order: [[ 1, "asc" ]],
+    select: {
+      style: 'os',
+      selector: 'td:first-child',
+    },
+    // columns: [
+    //   {"name" : "brand"},
+    //   {"name" : "name"},
+    //   {"name" : "quantity"},
+    //   {"name" : "rating"},
+    // ],
+    fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+      var setCell = function(response, newValue) {
+        var table = new $.fn.dataTable.Api('.table');
+        var cell = table.cell('td.focus');
+        var cellData = cell.data();
+
+        var div = document.createElement('div');
+        div.innerHTML = cellData;
+        var a = div.childNodes;
+        a.innerHTML = newValue;
+
+        console.log('jml a new ' + div.innerHTML);
+        cell.data(div.innerHTML);
+        highlightCell($(cell.node()));
+
+        // This is huge cheese, but the a has lost it's editable nature.  Do it again.
+        $('td.focus a').editable({
+          'mode': 'inline',
+          'success' : setCell
+          });
+      };
+      $('.editable').editable(
+        {
+          'mode': 'inline',
+          'success' : setCell
+        }
+      );
+    }
   });
+
+  // editable helpers
+  addCellChangeHandler();
+  function highlightCell($cell) {
+    var originalValue = $cell.attr('data-original-value');
+    if (!originalValue) {
+        return;
+    }
+    var actualValue = $cell.text();
+    if (!isNaN(originalValue)) {
+        originalValue = parseFloat(originalValue);
+    }
+    if (!isNaN(actualValue)) {
+        actualValue = parseFloat(actualValue);
+    }
+    if ( originalValue === actualValue ) {
+        $cell.removeClass('cat-cell-modified').addClass('cat-cell-original');
+    } else {
+        $cell.removeClass('cat-cell-original').addClass('cat-cell-modified');
+    }
+  }
+
+  function addCellChangeHandler() {
+    $('a[data-pk]').on('hidden', function (e, editable) {
+        var $a = $(this);
+        var $cell = $a.parent('td');
+        highlightCell($cell);
+    });
+  }
 
   // Add event listener for opening and closing details
   $('#myShelf tbody').on('click', 'td.details-control', function () {
@@ -195,7 +261,15 @@ $(document).ready(function() {
           row.child(format(tr.data('child-value'))).show();
           tr.addClass('shown');
       }
-  } );
+  });
+
+  // rating
+  $('.rating > .half, .rating > .full').on('click', function (e) {
+    let rating = $(this).attr('for');
+    // $.ajax({
+    //
+    // })
+  });
 
   // Instantiate the board grid so we can drag those
   // columns around.
