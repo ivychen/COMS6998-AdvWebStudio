@@ -265,10 +265,25 @@ $(document).ready(function() {
 
   // rating
   $('.rating > .half, .rating > .full').on('click', function (e) {
-    let rating = $(this).attr('for');
-    // $.ajax({
-    //
-    // })
+    let id = $(this).attr('for');
+    let rating = $('#'+id).attr('value');
+    let productId = $(this).closest('tr').data('child-value');
+    let username = $(this).closest('#myShelf').data('user');
+
+    $.ajax({
+      url: '/rateProduct',
+      type: "POST",
+      dataType:'json',
+      contentType: "application/json",
+      headers: {"Content-Type": "application/json"},
+      data: JSON.stringify({
+        username: username,
+        rating: rating,
+        productId: productId,
+      }),
+    }).done(function (data) {
+      console.log('Successfully updated rating.')
+    })
   });
 
   // Instantiate the board grid so we can drag those

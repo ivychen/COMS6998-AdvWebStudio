@@ -6,18 +6,12 @@ collects = db.Table('collects',
     db.Column('productId', db.Integer, db.ForeignKey('product.id'), primary_key=True)
 )
 
-# owns = db.Table('owns',
-#     db.Column('username', db.String(140), db.ForeignKey('user.username'), primary_key=True),
-#     db.Column('productId', db.Integer, db.ForeignKey('product.id'), primary_key=True),
-#     db.Column('quantity', db.Integer)
-# )
-
 class User_own_product(db.Model):
     __tablename__= 'user_own_product'
     username = db.Column(db.String(140), db.ForeignKey('user.username'), primary_key=True)
     productId = db.Column(db.Integer, db.ForeignKey('product.id'), primary_key=True)
     quantity = db.Column(db.Integer)
-    rating = db.Column(db.Integer)
+    rating = db.Column(db.String(5))
 
     user = db.relationship('User', back_populates="products")
     product = db.relationship('Product', back_populates="users")
@@ -88,3 +82,9 @@ class List(db.Model):
     # Owner of list
     owner = db.Column(db.Integer, db.ForeignKey('user.username', ondelete='CASCADE'), nullable=False)
     products = db.relationship('Product', secondary=collects, lazy='subquery', backref=db.backref('list', lazy=True))
+
+# owns = db.Table('owns',
+#     db.Column('username', db.String(140), db.ForeignKey('user.username'), primary_key=True),
+#     db.Column('productId', db.Integer, db.ForeignKey('product.id'), primary_key=True),
+#     db.Column('quantity', db.Integer)
+# )

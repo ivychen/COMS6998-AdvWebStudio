@@ -40,7 +40,7 @@ def products(username):
     user = aliased(models.User)
     products = db.session.query(models.User_own_product, models.Product).join(models.Product).join(user, models.User).filter(user.username==username).all()
 
-    return render_template('shelf.html', products=products)
+    return render_template('shelf.html', products=products, username=username)
 
 @app.route('/product/<id>', methods=['POST', 'GET'])
 def product(id):
@@ -267,6 +267,22 @@ def productDetails():
         "imgsrc" : result.imgsrc,
         "category" : result.category}
     return jsonify(result=[res])
+
+@app.route('/rateProduct', methods=['POST', 'GET'])
+def rateProduct():
+    print(request.json)
+    rating = request.json.get('rating')
+    username = request.json.get('username')
+    productId = int(request.json.get('productId'))
+
+    record = models.User_own_product.query.filter_by(username=username, productId=productId).first()
+    record.rating = rating
+    db.session.merge(record)
+    db.session.flush()
+    db.session.commit()
+
+    return jsonify(result=True)
+
 
 if __name__ == '__main__':
 	socketio.run(app)
