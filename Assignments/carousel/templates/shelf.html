@@ -7,7 +7,7 @@
     <h3>My Shelf</h3>
   </div>
 
-  <ul id="products" class="product-container card-grid">
+  <!-- <ul id="products" class="product-container card-grid">
     {% for product in products %}
     <li class="product-item">
       <div class="card" style="width: 10rem;">
@@ -19,6 +19,28 @@
       </div>
     </li>
     {% endfor %}
-  </ul>
+  </ul> -->
+
+  <!-- DataTable container -->
+  <table id="myShelf" class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Brand</th>
+        <th>Product Name</th>
+        <th>Quantity</th>
+      </tr>
+    <thead>
+    <tbody>
+      {% for product in products %}
+      <tr data-child-value="{{ product[1].id }}">
+        <td class="details-control"></td>
+        <td>{{product[1].brand}}</td>
+        <td><a href="/product/{{ product[1].id }}">{{product[1].name}}</a></td>
+        <td>{{product[0].quantity}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   {% endblock %}
 {% endblock %}

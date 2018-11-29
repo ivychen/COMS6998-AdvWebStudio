@@ -5,6 +5,7 @@ from flask_socketio import SocketIO, send, disconnect
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
+from sqlalchemy.orm import aliased
 import functools
 import dateutil.parser as dt
 
@@ -35,9 +36,9 @@ def main():
 
 @app.route('/shelf/<username>', methods=['POST', 'GET'])
 def products(username):
-    products = models.Product.query.filter(models.Product.users.any(username=username)).all()
-
-    print("===PRODUCTS", products)
+    # products = models.Product.query.filter(models.Product.users.any(username=username)).all()
+    user = aliased(models.User)
+    products = db.session.query(models.User_own_product, models.Product).join(models.Product).join(user, models.User).filter(user.username==username).all()
 
     return render_template('shelf.html', products=products)
 
@@ -254,6 +255,18 @@ def autocomplete_category():
     query = models.Product.query.filter(models.Product.category.ilike("%" + search + "%")).with_entities(models.Product.category).distinct().all()
     results = [res.category for res in query]
     return jsonify(matching_results=results)
+
+@app.route('/productDetails',methods=['POST', 'GET'])
+def productDetails():
+    prodId = request.args.get('id')
+    result = models.Product.query.filter_by(id=int(prodId)).first()
+    res = {"id" : result.id,
+        "brand" : result.brand,
+        "name" : result.name,
+        "description" : result.description,
+        "imgsrc" : result.imgsrc,
+        "category" : result.category}
+    return jsonify(result=[res])
 
 if __name__ == '__main__':
 	socketio.run(app)

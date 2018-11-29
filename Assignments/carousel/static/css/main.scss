@@ -286,3 +286,14 @@ body > .container-fluid {
     width: 100%;
   }
 }
+
+// DataTables
+td.details-control {
+    background: url('../resources/plus.png') no-repeat center center;
+    background-size: contain;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('../resources/minus.png') no-repeat center center;
+    background-size: contain;
+}

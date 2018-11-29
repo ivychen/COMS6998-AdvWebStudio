@@ -273,3 +273,14 @@ body > .container-fluid .inner-container {
 .form-search-bar .input-group {
   width: 100%;
 }
+
+td.details-control {
+  background: url("../resources/plus.png") no-repeat center center;
+  background-size: contain;
+  cursor: pointer;
+}
+
+tr.shown td.details-control {
+  background: url("../resources/minus.png") no-repeat center center;
+  background-size: contain;
+}

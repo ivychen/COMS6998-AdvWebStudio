@@ -1,3 +1,28 @@
+/* Formatting function for row details - modify as you need */
+function format ( id ) {
+  var div = $('<div/>')
+      .addClass( 'loading' )
+      .text( 'Loading...' );
+
+  $.ajax( {
+      url: '/productDetails',
+      data: {
+          id: id
+      },
+      headers: {"Content-Type": "application/json"},
+      type: 'GET',
+      success: function ( product ) {
+        let prod = product.result[0];
+        console.log(prod);
+        div
+            .html('<div><a href="/product/' + prod.id + '"><img class="card-img-top" src="' + prod.imgsrc + '" alt="Card image cap"></a></div>')
+            .removeClass( 'loading' );
+      }
+  } );
+
+  return div;
+}
+
 $(document).ready(function() {
   var socket = io.connect('http://127.0.0.1:5000');
 
@@ -148,6 +173,30 @@ $(document).ready(function() {
 
   });
 
+  // === DataTables ===
+  var table = $('#myShelf').DataTable({
+    paging: true,
+    order: [[ 1, "asc" ]]
+  });
+
+  // Add event listener for opening and closing details
+  $('#myShelf tbody').on('click', 'td.details-control', function () {
+      var tr = $(this).closest('tr');
+      var row = table.row( tr );
+
+      if ( row.child.isShown() ) {
+          // This row is already open - close it
+          row.child.hide();
+          tr.removeClass('shown');
+      }
+      else {
+          // Open this row
+          console.log(tr.data('child-value'));
+          row.child(format(tr.data('child-value'))).show();
+          tr.addClass('shown');
+      }
+  } );
+
   // Instantiate the board grid so we can drag those
   // columns around.
   boardGrid = new Muuri('.board', {
@@ -161,5 +210,4 @@ $(document).ready(function() {
     dragReleaseDuration: 400,
     dragReleaseEasing: 'ease'
   });
-
 });
