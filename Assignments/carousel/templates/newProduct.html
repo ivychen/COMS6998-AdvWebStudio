@@ -8,30 +8,45 @@
   </div>
 
   <div class="inner-container container-fluid">
-    <form>
+    <form class="needs-validation" novalidate>
       <div class="form-group">
         <label for="brand">Brand</label>
-        <input type="text" class="form-control" id="autocomplete" placeholder="" name="brand">
+        <input type="text" class="form-control" id="autocomplete" placeholder="" name="brand" required>
+        <div class="invalid-feedback">
+          Please choose a brand.
+        </div>
       </div>
 
       <div class="form-group">
         <label for="category">Category</label>
-        <input type="text" class="form-control" id="category" placeholder="" name="category">
+        <input type="text" class="form-control" id="category" placeholder="" name="category" required>
+        <div class="invalid-feedback">
+          Please choose a category.
+        </div>
       </div>
 
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" placeholder="" name="name">
+        <input type="text" class="form-control" id="name" placeholder="" name="name" required>
+        <div class="invalid-feedback">
+          Please choose a product name.
+        </div>
       </div>
 
       <div class="form-group">
         <label for="imgsrc">Image URL</label>
-        <input type="text" class="form-control" id="imgsrc" placeholder="" name="imgsrc">
+        <input type="text" class="form-control" id="imgsrc" placeholder="" name="imgsrc" required>
+        <div class="invalid-feedback">
+          Please provide an image URL.
+        </div>
       </div>
 
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea class="form-control" id="description" rows="3" name="description"></textarea>
+        <textarea class="form-control" id="description" rows="3" name="description" required></textarea>
+        <div class="invalid-feedback">
+          Please provide a product description.
+        </div>
       </div>
 
       <button type="submit" class="btn btn-primary mb-2">Add Product</button>

@@ -4,29 +4,67 @@
   {% block content %}
 
   <div class="row">
-    <h3>My Shelf</h3>
+    <div class="col-sm-12 col-md-6">
+      <h3>My Products</h3>
+    </div>
   </div>
 
+  {% if not products %}
+  <div class="row">
+    <div class="col-sm-12 col-12">
+      <div class="jumbotron jumbotron-fluid jumbotron-psa">
+        <div class="row spacer">
+          <p class="lead lead-inline">Looks like your shelf is empty -- let's add some products.</p>
+        </div>
+
+        <div class="row spacer row-block">
+          <!-- Search form -->
+          <form class="form-search form-inline" action="/search" method="POST">
+            <div class="input-group input-block">
+              <input type="text" class="form-control" name="query" id="query" placeholder="Search by product/brand/category">
+              <div class="input-group-append">
+                <button class="btn btn-secondary" type="button">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="row">
+          <p class="lead lead-inline">Can't find a product?</p>
+          <a class="btn btn-primary" href="/newProduct" role="button">Add a New Product</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
   <!-- DataTable container -->
   <table id="myShelf" data-user="{{username}}" class="table table-striped table-bordered">
     <thead>
       <tr>
         <th></th>
+        <th>Category</th>
         <th>Brand</th>
         <th>Product Name</th>
-        <th>Quantity</th>
+        <th>Qty</th>
         <th>My Rating</th>
-        <th>Options</th>
+        <th></th>
       </tr>
     <thead>
     <tbody>
       {% for product in products %}
       <tr data-child-value="{{ product[1].id }}">
         <td class="details-control"></td>
+        <td>
+          <a href="/">
+            <button type="button" class="btn btn-outline-info btn-sm tag-category">{{ product[1].category }}</button>
+          </a>
+        </td>
         <td>{{product[1].brand}}</td>
         <td><a href="/product/{{ product[1].id }}">{{product[1].name}}</a></td>
         <td data-original-value="{{product[0].quantity}}">
-          <a href="#" data-type="text" data-pk="1" class="editable">{{product[0].quantity}}</a>
+          <!-- <a href="#" data-type="text" data-pk="1" class="editable">{{product[0].quantity}}</a> -->
+          {{product[0].quantity}}
         </td>
         <td data-original-value="{{product[0].rating}}">
           <!-- <a href="#" data-type="text" data-pk="1" class="editable">{{product[0].rating}}</a> -->
@@ -103,11 +141,14 @@
         </fieldset>
         </td>
         <td>
-          <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+          <a href="/shelf/remove/{{ username }}/{{ product[1].id }}">
+            <button type="button" class="btn btn-outline-danger btn-sm">Delete</button>
+          </a>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+  {% endif %}
   {% endblock %}
 {% endblock %}

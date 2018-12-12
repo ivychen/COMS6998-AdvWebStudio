@@ -13,9 +13,18 @@ function format ( id ) {
       type: 'GET',
       success: function ( product ) {
         let prod = product.result[0];
-        console.log(prod);
+        if (prod.description == null) {
+          prod.description = "Description coming soon."
+        }
         div
-            .html('<div><div class="card" style="width: 10rem;"><a href="/product/' + prod.id + '"><img class="card-img-top" src="' + prod.imgsrc + '" alt="Card image cap"></a></div></div>')
+            .html('<div class="card"><div class="row "><div class="col-md-4">' +
+                  '<a href="/product/' + prod.id + '"><img class="card-img-top product-img" src="' + prod.imgsrc + '" alt="Card image cap"></a>' +
+                  '</div>' +
+                  '<div class="col-md-8 px-3">' +
+                  '<div class="card-block px-3">' +
+                  '<h4 class="card-title"><a href="/product/' + prod.id + '">' + prod.name + '</a></h4>' +
+                  '<p class="card-text">'+ prod.description + '</p>' +
+                  '</div></div></div></div></div>')
             .removeClass( 'loading' );
       }
   });
@@ -172,6 +181,22 @@ $(document).ready(function() {
 
   });
 
+  // === FORM VALIDATION ===
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+
   // === DataTables ===
   var table = $('#myShelf').DataTable({
     paging: true,
@@ -197,8 +222,11 @@ $(document).ready(function() {
         var a = div.childNodes;
         a.innerHTML = newValue;
 
-        console.log('jml a new ' + div.innerHTML);
-        cell.data(div.innerHTML);
+        console.log('inner' + div.innerHTML)
+        console.log(a.innerHTML)
+        console.log(cell)
+
+        cell.data(a.innerHTML);
         highlightCell($(cell.node()));
 
         // This is huge cheese, but the a has lost it's editable nature.  Do it again.
@@ -285,6 +313,14 @@ $(document).ready(function() {
       console.log('Successfully updated rating.')
     })
   });
+
+  // editable
+  $('#myShelf .editable').editable({
+    type: 'text',
+    quantity: 'Qty',
+    url: '/shelf/updateQty',
+    title: 'Updating editable quantity',
+  })
 
   // Instantiate the board grid so we can drag those
   // columns around.

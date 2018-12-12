@@ -2,6 +2,8 @@
 
 Prof. Lydia Chilton
 
+[Course Site](http://www.columbia.edu/~lc3251/courses/fall18/)
+
 ## Assignments
 1. Rebuild IMDB
 2. Rebuild Twitter

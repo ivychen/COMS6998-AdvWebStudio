@@ -26,17 +26,28 @@ def authenticated_only(f):
 @app.route('/', methods=['POST', 'GET'])
 def main():
     page = request.args.get('page', 1, type=int)
-    products = models.Product.query.order_by(models.Product.name.asc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('main', page=products.next_num) \
-        if products.has_next else None
-    prev_url = url_for('main', page=products.prev_num) \
-        if products.has_prev else None
+    stock = models.Product.query.order_by(models.Product.name.asc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('main', page=stock.next_num) \
+        if stock.has_next else None
+    prev_url = url_for('main', page=stock.prev_num) \
+        if stock.has_prev else None
 
-    return render_template('main.html', products=products.items, next_url=next_url, prev_url=prev_url)
+    # check if current user is the logged in username
+    if current_user.username:
+        username = current_user.username
+        user = aliased(models.User)
+        products = db.session.query(models.User_own_product, models.Product).join(models.Product).join(user, models.User).filter(user.username==username).all()
+
+        return render_template('shelf.html', products=products, username=current_user.username, float=float)
+    else:
+        return render_template('main.html', products=stock.items, next_url=next_url, prev_url=prev_url)
 
 @app.route('/shelf/<username>', methods=['POST', 'GET'])
+@login_required
 def products(username):
-    # products = models.Product.query.filter(models.Product.users.any(username=username)).all()
+    # check if current user is the logged in username
+    if current_user.username != username:
+        return redirect(url_for('/shelf/' + current_user.username))
     user = aliased(models.User)
     products = db.session.query(models.User_own_product, models.Product).join(models.Product).join(user, models.User).filter(user.username==username).all()
 
@@ -50,6 +61,7 @@ def product(id):
     inShelf = models.User_own_product.query.filter_by(username=current_user.username, productId=id).first()
 
     return render_template('product.html', product=product, inShelf=inShelf)
+
 
 @app.route('/newProduct', methods=['POST', 'GET'])
 def newProduct():
@@ -68,6 +80,15 @@ def newProduct():
 
     return render_template('newProduct.html')
 
+
+@app.route('/shelf/remove/<username>/<id>', methods=['POST', 'GET'])
+@login_required
+def removeProduct(username, id):
+    models.User_own_product.query.filter(models.User_own_product.username == username, models.User_own_product.productId == int(id)).delete()
+    db.session.commit()
+
+    return redirect('/shelf/' + current_user.username)
+
 @app.route("/shelf/add", methods=['POST'])
 def add_to_shelf():
     if request.method == "POST":
@@ -82,11 +103,6 @@ def add_to_shelf():
 
 @app.route("/shelf/update", methods=['POST'])
 def update_to_shelf():
-    # statement = models.owns.insert().values(username=current_user.username, productId=request.form['product'], quantity=request.form['quantity'])
-
-    # statement = update(models.owns).where()
-
-    # db.session.execute(statement)
     prod = models.User_own_product.query.filter_by(username=current_user.username, productId=request.form['id']).first()
     prod.quantity = int(request.form['quantity'])
     db.session.merge(prod)
@@ -117,6 +133,7 @@ def search():
         allProducts = []
         products = models.Product.query.filter(models.Product.name.ilike("%" + search + "%")).all()
         brands = models.Product.query.filter(models.Product.brand.ilike("%" + search + "%")).all()
+        categories = models.Product.query.filter(models.Product.category.ilike("%" + search + "%")).all()
 
         for p in products:
             if p.id not in productSet:
@@ -124,6 +141,11 @@ def search():
                 allProducts.append(p)
 
         for p in brands:
+            if p.id not in productSet:
+                productSet.add(p.id)
+                allProducts.append(p)
+
+        for p in categories:
             if p.id not in productSet:
                 productSet.add(p.id)
                 allProducts.append(p)
@@ -285,4 +307,5 @@ def rateProduct():
 
 
 if __name__ == '__main__':
-	socketio.run(app)
+	# socketio.run(app)
+    app.run(debug=True)

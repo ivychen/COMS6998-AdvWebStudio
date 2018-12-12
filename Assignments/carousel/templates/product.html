@@ -3,72 +3,79 @@
 {% block body %}
   {% block content %}
 
-  <div class="row">
-    <h6 class="mb-2 text-muted">{{ product.brand }}</h6>
-  </div>
-  <!-- <div class="header row"> -->
-  <div class="row">
-    <h3>{{ product.name }}</h3>
-  </div>
+  <div class="container h-100 d-flex justify-content-center">
+    <div class="product w-100">
+      <div class="product-heading w-100 row">
+      <img src="{{ product.imgsrc }}" class="product-img rounded float-left" alt="...">
+      <div class="row">
+        <h6 class="mb-2 text-muted">{{ product.brand }}</h6>
+      </div>
 
-  <div class="row">
-    {% if inShelf %}
-    <h6 class="mb-2 text-muted">Your Shelf Quantity: {{ inShelf.quantity }}</h6>
-    {% else %}
-    <h6 class="mb-2 text-muted">NOT OWNED</h6>
-    {% endif %}
-  </div>
+      <div class="row spacer">
+        <h3>{{ product.name }}</h3>
+      </div>
+      <div class="row hr-bottom">
+        {% if product.description %}
+          <p>{{ product.description }}</p>
+        {% else %}
+          <p>Description coming soon.</p>
+        {% endif %}
+      </div>
 
-  <div class="inner-container container-fluid">
-    <div class="product">
-      <div class="product-heading row">
-      <img src="{{ product.imgsrc }}" class="product-img rounded float-right" alt="...">
-      <!-- <p>Description:</p> -->
-      <p>{{ product.description }}</p>
+      {% if inShelf %}
+      <h6 class="mb-2 text-muted">You own: {{ inShelf.quantity }}</h6>
+      {% else %}
+      <h6 class="mb-2 text-muted">Oops! You currently don't own any!</h6>
+      {% endif %}
+
+      {% if inShelf %}
+      <div class="row product-form">
+        <form class="form-inline" action="/shelf/update" method="POST">
+          <div class="mx-sm-3 mb-2 form-inline">
+            <div class="form-group col-md-12 qty-group">
+              <label class="col-sm-1 col-form-label" for="quantity">QTY</label>
+              <input type="text" name="quantity" class="form-control form-control-plaintext" id="quantity" aria-describedby="quantityHelp" value="{{inShelf.quantity}}">
+            </div>
+          </div>
+
+          <div class="form-group mb-2 row d-none" hidden>
+            <label for="id" class="sr-only">Id</label>
+            <input type="text" name="id" class="form-control-plaintext" id="id" aria-describedby="idHelp" value="{{ product.id }}" readonly>
+          </div>
+
+          <button type="submit" class="btn btn-primary mb-2 product-button-update">UPDATE QUANTITY</button>
+        </form>
+
+        <form class="form-inline" action="/shelf/remove/{{product.id}}" method="POST">
+          <div class="form-group row d-none" hidden>
+            <label for="id">ID</label>
+            <input type="text" name="id" class="form-control-plaintext" id="id" aria-describedby="idHelp" value="{{ product.id }}" readonly>
+          </div>
+
+          <button type="submit" class="btn product-button-remove">REMOVE</button>
+        </form>
+      </div>
+
+      {% else %}
+      <div class="row product-form">
+        <form class="form-inline" action="/shelf/add" method="POST">
+          <div class="mx-sm-3 mb-2 form-inline d-none">
+            <div class="form-group col-md-12">
+              <label class="col-sm-1 col-form-label" for="quantity">QTY</label>
+              <input type="text" name="quantity" class="form-control form-control-plaintext" id="quantity" aria-describedby="quantityHelp" value="1">
+            </div>
+          </div>
+
+          <div class="form-group mb-2 row d-none" hidden>
+            <label for="id">ID</label>
+            <input type="text" name="id" class="form-control-plaintext" id="id" aria-describedby="idHelp" value="{{ product.id }}" readonly>
+          </div>
+
+          <button type="submit" class="btn product-button-update">ADD TO SHELF</button>
+        </form>
+      </div>
+      {% endif %}
     </div>
   </div>
-
-  {% if inShelf %}
-  <div class="row">
-    <form class="form-inline" action="/shelf/update" method="POST">
-      <div class="form-group mb-2 row">
-        <label for="id" class="sr-only">Id</label>
-        <input type="text" name="id" class="form-control-plaintext" id="id" aria-describedby="idHelp" value="{{ product.id }}" readonly hidden>
-      </div>
-      <div class="form-group mx-sm-3 mb-2 row">
-        <label for="quantity">Quantity</label>
-        <input type="text" name="quantity" class="form-control-plaintext" id="quantity" aria-describedby="quantityHelp" value="{{inShelf.quantity}}">
-      </div>
-      <button type="submit" class="btn btn-primary mb-2">Update Quantity</button>
-    </form>
-  </div>
-
-  <div class="row">
-    <form class="form-inline" action="/shelf/remove/{{product.id}}" method="POST">
-      <div class="form-group row" hidden>
-        <label for="id">ID</label>
-        <input type="text" name="id" class="form-control-plaintext" id="id" aria-describedby="idHelp" value="{{ product.id }}" readonly>
-      </div>
-
-      <button type="submit" class="btn btn-danger">Remove from Shelf</button>
-    </form>
-  </div>
-
-  {% else %}
-  <div class="row">
-    <form class="form-inline" action="/shelf/add" method="POST">
-      <div class="form-group mb-2 row" hidden>
-        <label for="id">ID</label>
-        <input type="text" name="id" class="form-control-plaintext" id="id" aria-describedby="idHelp" value="{{ product.id }}" readonly>
-      </div>
-      <div class="form-group mx-sm-3 mb-2 row">
-        <label for="quantity" hidden>Quantity</label>
-        <input type="text" name="quantity" class="form-control-plaintext" id="quantity" aria-describedby="quantityHelp" value="1" readonly hidden>
-      </div>
-      <button type="submit" class="btn btn-danger">Add to Shelf</button>
-    </form>
-  </div>
-  {% endif %}
-
   {% endblock %}
 {% endblock %}
