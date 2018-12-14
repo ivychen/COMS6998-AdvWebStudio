@@ -6,16 +6,16 @@ Prof. Lydia Chilton
 
 ## Carousel Screenshots
 
-![Homepage](./src/c1.png)
+![Main](https://github.com/ivychen/COMS6998-AdvWebStudio/blob/master/src/c1.PNG)
 *Main*
 
-![Homepage](./src/c2.png)
+![Shelf](https://github.com/ivychen/COMS6998-AdvWebStudio/blob/master/src/c2.PNG)
 *Dashboard/Shelf*
 
-![Homepage](./src/c3.png)
+![Top](https://github.com/ivychen/COMS6998-AdvWebStudio/blob/master/src/c3.PNG)
 *Top Products*
 
-![Homepage](./src/c4.png)
+![Product](https://github.com/ivychen/COMS6998-AdvWebStudio/blob/master/src/c4.PNG)
 *Product Details*
 
 
