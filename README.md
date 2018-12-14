@@ -6,16 +6,16 @@ Prof. Lydia Chilton
 
 ## Carousel Screenshots
 
-![Homepage](src/c1.png)
+![Homepage](./src/c1.png)
 *Main*
 
-![Homepage](src/c2.png)
+![Homepage](./src/c2.png)
 *Dashboard/Shelf*
 
-![Homepage](src/c3.png)
+![Homepage](./src/c3.png)
 *Top Products*
 
-![Homepage](src/c4.png)
+![Homepage](./src/c4.png)
 *Product Details*
 
 
