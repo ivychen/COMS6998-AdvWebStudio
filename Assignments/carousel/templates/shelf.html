@@ -5,9 +5,22 @@
 
   <div class="row">
     <div class="col-sm-12 col-md-6">
-      <h3>My Products</h3>
+      <h3>MY SHELF</h3>
     </div>
   </div>
+
+  {% if categories %}
+  <div class="row spacer">
+    <div class="col-sm-12 col-md-12">
+      <span class="mini">TOP PICKS FOR YOUR RECOMMENDED CATEGORIES:</span>
+      {% for category in categories %}
+        <a href="/">
+          <button type="button" data-toggle="modal" data-target="#exampleModalCenter" data-category="{{category}}" class="recommend btn btn-outline-info btn-sm tag-category">{{ category }}</button>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
   {% if not products %}
   <div class="row">
@@ -17,9 +30,20 @@
           <p class="lead lead-inline">Looks like your shelf is empty -- let's add some products.</p>
         </div>
 
+        {% if popCategories %}
+        <div class="row spacer mini-wrapper">
+          <span class="mini">TOP PICKS FOR TRENDING CATEGORIES:</span>
+          {% for category in popCategories %}
+            <a href="/" class="tag">
+              <button type="button" data-toggle="modal" data-target="#exampleModalCenter" data-category="{{category}}" class="recommend btn btn-outline-info btn-sm tag-category">{{ category }}</button>
+            </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+
         <div class="row spacer row-block">
           <!-- Search form -->
-          <form class="form-search form-inline" action="/search" method="POST">
+          <!-- <form class="form-search form-inline" action="/search" method="POST">
             <div class="input-group input-block">
               <input type="text" class="form-control" name="query" id="query" placeholder="Search by product/brand/category">
               <div class="input-group-append">
@@ -28,11 +52,11 @@
                 </button>
               </div>
             </div>
-          </form>
+          </form> -->
         </div>
-        <div class="row">
-          <p class="lead lead-inline">Can't find a product?</p>
-          <a class="btn btn-primary" href="/newProduct" role="button">Add a New Product</a>
+        <div class="row new-prod">
+          <p class="mini">Can't find a product?</p>
+          <a class="btn btn-primary product-button-update" href="/newProduct" role="button">Add a New Product</a>
         </div>
       </div>
     </div>
@@ -57,7 +81,7 @@
         <td class="details-control"></td>
         <td>
           <a href="/">
-            <button type="button" class="btn btn-outline-info btn-sm tag-category">{{ product[1].category }}</button>
+            <button type="button" data-toggle="modal" data-target="#exampleModalCenter" data-category="{{product[1].category}}" class="recommend btn btn-outline-info btn-sm tag-category">{{ product[1].category }}</button>
           </a>
         </td>
         <td>{{product[1].brand}}</td>
@@ -150,5 +174,37 @@
     </tbody>
   </table>
   {% endif %}
+
+  <!-- recommendations -->
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <!-- <button type="button" class="btn btn-primary">Cool!</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 col-12">
+      <div class="new-prod">
+      <p class="mini">Can't find a product?</p>
+      <a class="btn btn-primary product-button-update" href="/newProduct" role="button">Add a New Product</a>
+      </div>
+    </div>
+  </div>
+
   {% endblock %}
 {% endblock %}

@@ -32,35 +32,56 @@ def main():
     prev_url = url_for('main', page=stock.prev_num) \
         if stock.has_prev else None
 
+    user = aliased(models.User)
+    categories = db.session.query(models.User_own_product, models.Product.category).join(models.Product).join(user, models.User).all()
+
+    popc = set([c.category for c in categories])
+
     # check if current user is the logged in username
-    if current_user.username:
+    if current_user.is_authenticated:
         username = current_user.username
         user = aliased(models.User)
         products = db.session.query(models.User_own_product, models.Product).join(models.Product).join(user, models.User).filter(user.username==username).all()
 
-        return render_template('shelf.html', products=products, username=current_user.username, float=float)
+        categories = db.session.query(models.User_own_product, models.Product.category).join(models.Product).join(user, models.User).filter(user.username==username).all()
+
+        uniqueCategories = set([c.category for c in categories])
+
+        return render_template('shelf.html', products=products, username=current_user.username, float=float, categories=uniqueCategories, popCategories=popc)
     else:
-        return render_template('main.html', products=stock.items, next_url=next_url, prev_url=prev_url)
+        return render_template('main.html', products=stock.items, next_url=next_url,prev_url=prev_url,popCategories=popc)
 
-@app.route('/shelf/<username>', methods=['POST', 'GET'])
-@login_required
-def products(username):
-    # check if current user is the logged in username
-    if current_user.username != username:
-        return redirect(url_for('/shelf/' + current_user.username))
-    user = aliased(models.User)
-    products = db.session.query(models.User_own_product, models.Product).join(models.Product).join(user, models.User).filter(user.username==username).all()
+@app.route('/browse', methods=['POST', 'GET'])
+def browse():
+    page = request.args.get('page', 1, type=int)
+    stock = models.Product.query.order_by(models.Product.name.asc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('browse', page=stock.next_num) \
+        if stock.has_next else None
+    prev_url = url_for('browse', page=stock.prev_num) \
+        if stock.has_prev else None
 
-    return render_template('shelf.html', products=products, username=username, float=float)
+    allCategories = models.Product.query.with_entities(models.Product.category).distinct().all()
+
+    allc = [c.category for c in allCategories]
+
+    return render_template('products.html', products=stock.items, next_url=next_url, prev_url=prev_url, allCategories=allc)
+
+@app.route('/user/<username>', methods=['POST', 'GET'])
+def user(username):
+    user = models.User.query.filter_by(username=username).first()
+
+    return render_template('user.html', user=user)
+
 
 @app.route('/product/<id>', methods=['POST', 'GET'])
 def product(id):
     product = models.Product.query.filter_by(id=id).first()
-    # inShelf = db.session.query(models.owns).filter_by(username=current_user.username, productId=id).first()
 
-    inShelf = models.User_own_product.query.filter_by(username=current_user.username, productId=id).first()
+    if current_user.is_authenticated:
+        inShelf = models.User_own_product.query.filter_by(username=current_user.username, productId=id).first()
+        return render_template('product.html', product=product, inShelf=inShelf)
 
-    return render_template('product.html', product=product, inShelf=inShelf)
+    return render_template('product.html', product=product, inShelf=False)
 
 
 @app.route('/newProduct', methods=['POST', 'GET'])
@@ -87,19 +108,17 @@ def removeProduct(username, id):
     models.User_own_product.query.filter(models.User_own_product.username == username, models.User_own_product.productId == int(id)).delete()
     db.session.commit()
 
-    return redirect('/shelf/' + current_user.username)
+    return redirect(url_for("main"))
 
 @app.route("/shelf/add", methods=['POST'])
 def add_to_shelf():
     if request.method == "POST":
-        # statement = models.owns.insert().values(username=current_user.username, productId=request.form['id'], quantity=request.form['quantity'])
-
-        # db.session.execute(statement)
         prod = models.User_own_product(username=current_user.username, productId=request.form['id'], quantity=request.form['quantity'])
         db.session.add(prod)
         db.session.commit()
+        return redirect(url_for('main'))
 
-    return redirect(request.referrer or url_for('main'))
+    return redirect(url_for('main'))
 
 @app.route("/shelf/update", methods=['POST'])
 def update_to_shelf():
@@ -109,7 +128,7 @@ def update_to_shelf():
     db.session.flush()
     db.session.commit()
 
-    return redirect(request.referrer or url_for('main'))
+    return redirect(url_for('main'))
 
 @app.route("/shelf/remove/<id>", methods=['POST'])
 def remove_from_shelf(id):
@@ -120,7 +139,7 @@ def remove_from_shelf(id):
     db.session.flush()
     db.session.commit()
 
-    return redirect(request.referrer or url_for('main'))
+    return redirect(url_for('main'))
 
 @app.route('/search', methods=['POST', 'GET'])
 def search():
@@ -155,34 +174,6 @@ def search():
 
     return render_template('search.html', search=search, products=allProducts, len=len)
 
-@app.route('/messages/<username>', methods=['POST', 'GET'])
-# @login_required
-def messages(username):
-    page = request.args.get('page', 1, type=int)
-    messages = models.Message.query.filter_by(sender=username).order_by(models.Message.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('messages', username=username, page=messages.next_num) \
-        if messages.has_next else None
-    prev_url = url_for('messages', username=username, page=messages.prev_num) \
-        if messages.has_prev else None
-    return render_template('messages.html', messages=messages.items, next_url=next_url, prev_url=prev_url)
-
-@app.route('/saved', methods=['POST', 'GET'])
-# @login_required
-def saved():
-    page = request.args.get('page', 1, type=int)
-    listId = models.List.query.filter_by(owner=current_user.username).first()
-    # saved = models.List.query.filter_by(owner=current_user.username).first().messages
-    messages = db.session.query(models.Message)\
-        .join(models.collects)\
-        .filter_by(listId=listId.id)\
-        .order_by(models.Message.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
-
-    next_url = url_for('saved', page=messages.next_num) \
-        if messages.has_next else None
-    prev_url = url_for('saved', page=messages.prev_num) \
-        if messages.has_prev else None
-    return render_template('saved.html', messages=messages.items, next_url=next_url, prev_url=prev_url)
-
 
 # === LOGIN ====
 @login_manager.user_loader
@@ -202,7 +193,6 @@ def login():
         user = models.User.query.filter_by(username=request.form['username'].lower(), password=request.form['password']).first()
         if user:
             login_user(user, remember=True)
-            print('Logged in user', user.username)
             return redirect(url_for('main'))
         else:
             error = 'Invalid username or password.'
@@ -230,35 +220,6 @@ def logout():
     logout_user()
     return redirect(url_for('main'))
 
-# Sockets
-# @socketio.on('connect')
-# def connect_handler():
-#     print("CURRENT USER", current_user)
-#     if current_user.is_authenticated:
-#         emit('my response',
-#              {'message': '{0} has joined'.format(current_user.name)},
-#              broadcast=True)
-#     else:
-#         return False  # not allowed here
-
-# @socketio.on('message')
-# def handleMessage(msg):
-#     time = dt.parse(msg['timestamp'])
-#     message = models.Message(message=msg['message'], timestamp=time, sender=msg['sender'], replyto=msg['replyto'])
-#     db.session.add(message)
-#     db.session.commit()
-#     send(msg, broadcast=True)
-#
-# @socketio.on('save')
-# def handleSave(msg):
-#     ls = models.List.query.filter_by(owner=msg['user']).first()
-#     savedMsg = models.Message.query.get(msg['messageId'])
-#
-#     statement = models.collects.insert().values(listId=ls.id, msgId=msg['messageId'])
-#     db.session.execute(statement)
-#     db.session.commit()
-#     # send(msg, broadcast=True)
-
 # AJAX
 @app.route('/autocomplete',methods=['POST', 'GET'])
 def autocomplete():
@@ -278,6 +239,29 @@ def autocomplete_category():
     results = [res.category for res in query]
     return jsonify(matching_results=results)
 
+@app.route('/autocomplete_all',methods=['POST', 'GET'])
+def autocomplete_all():
+    search = request.args.get('term')
+    if not search:
+        search = ""
+
+    results = []
+
+    query = models.Product.query.filter(models.Product.category.ilike("%" + search + "%")).with_entities(models.Product.category).distinct().all()
+    categories = [res.category for res in query]
+
+    query = models.Product.query.filter(models.Product.brand.ilike("%" + search + "%")).with_entities(models.Product.brand).distinct().all()
+    brands = [res.brand for res in query]
+
+    query = models.Product.query.filter(models.Product.name.ilike("%" + search + "%")).with_entities(models.Product.name).distinct().all()
+    names = [res.name for res in query]
+
+    results.extend(categories)
+    results.extend(brands)
+    results.extend(names)
+
+    return jsonify(matching_results=results)
+
 @app.route('/productDetails',methods=['POST', 'GET'])
 def productDetails():
     prodId = request.args.get('id')
@@ -292,7 +276,6 @@ def productDetails():
 
 @app.route('/rateProduct', methods=['POST', 'GET'])
 def rateProduct():
-    print(request.json)
     rating = request.json.get('rating')
     username = request.json.get('username')
     productId = int(request.json.get('productId'))
@@ -304,6 +287,46 @@ def rateProduct():
     db.session.commit()
 
     return jsonify(result=True)
+
+@app.route('/recommend', methods=['POST', 'GET'])
+def recommend():
+    category = request.json.get('category')
+    # get top 5 products in category based on community rating
+
+    prod = aliased(models.Product)
+    own = aliased(models.User_own_product)
+
+    products = db.session.query(models.User_own_product.productId, func.avg(models.User_own_product.rating).label('rate')).join(models.Product).filter(models.Product.id==models.User_own_product.productId, models.Product.category==category).group_by(models.User_own_product.productId).order_by(func.avg(models.User_own_product.rating).desc()).all()
+
+    results = []
+    for p in products:
+        result = models.Product.query.filter_by(id=int(p.productId)).first()
+        res = {"id" : result.id,
+            "brand" : result.brand,
+            "name" : result.name,
+            "description" : result.description,
+            "imgsrc" : result.imgsrc,
+            "category" : result.category,
+            "rating" : p.rate}
+        results.append(res)
+
+    # empty
+    if not results:
+        products = models.Product.query.filter_by(category=category).limit(6).all()
+
+        for p in products:
+            res = {"id" : p.id,
+                "brand" : p.brand,
+                "name" : p.name,
+                "description" : p.description,
+                "imgsrc" : p.imgsrc,
+                "category" : p.category,
+                "rating" : None}
+            results.append(res)
+
+        return jsonify(recommendations=results, empty=True)
+
+    return jsonify(recommendations=results, empty=False)
 
 
 if __name__ == '__main__':

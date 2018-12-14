@@ -4,10 +4,13 @@
   {% block content %}
 
   <div class="row">
-    <h3>Add Product</h3>
+    <div class="col-sm-12 col-md-6">
+      <h3>ADD PRODUCT</h3>
+    </div>
   </div>
 
-  <div class="inner-container container-fluid">
+  <div class="row">
+  <div class="col-sm-12 col-12">
     <form class="needs-validation" novalidate>
       <div class="form-group">
         <label for="brand">Brand</label>
@@ -49,8 +52,9 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary mb-2">Add Product</button>
+      <button type="submit" class="btn btn-primary mb-2 product-button-update">Add Product</button>
     </form>
+  </div>
   </div>
 
   {% endblock %}

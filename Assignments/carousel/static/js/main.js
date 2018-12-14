@@ -17,8 +17,8 @@ function format ( id ) {
           prod.description = "Description coming soon."
         }
         div
-            .html('<div class="card"><div class="row "><div class="col-md-4">' +
-                  '<a href="/product/' + prod.id + '"><img class="card-img-top product-img" src="' + prod.imgsrc + '" alt="Card image cap"></a>' +
+            .html('<div class="card"><div class="row "><div class="col-md-4 image">' +
+                  '<a href="/product/' + prod.id + '"><img class="card-img-top" src="' + prod.imgsrc + '" alt="Card image cap"></a>' +
                   '</div>' +
                   '<div class="col-md-8 px-3">' +
                   '<div class="card-block px-3">' +
@@ -38,43 +38,6 @@ $(document).ready(function() {
     // console.log('User has connected!');
   });
 
-  socket.on('message', function(msg) {
-    $("#messages").prepend('<li><a href="/messages/' + msg.sender + '">' + msg.sender + '</a>' + " [" + msg.timestamp + "]: " + msg.message +
-    '<p><button data-username="' + msg.sender + '" data-id="' + msg.id +
-    '" data-message="' + msg.message + '" class="btn btn-outline-secondary reply">Reply</button></p>' +
-    '</li>');
-    console.log('Received message');
-  });
-
-  $('#sendbutton').on('click', function() {
-    let payload = {
-      "message": $('#myMessage').val(),
-      "timestamp": new Date(),
-      "sender": $('#sender').val(),
-      "replyto": "",
-    }
-    socket.emit('message', payload);
-    $('#myMessage').val('');
-  });
-
-  $('#messages').on('click', ".reply", function(e) {
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    $('#replyto').val($(this).attr('data-id'));
-    $('#to').text("To: " + $(this).attr('data-username') + ' "' + $(this).attr('data-message') + '"')
-  });
-
-  $('#replyButton').on('click', function() {
-    let payload = {
-      "message": $('#myReply').val(),
-      "timestamp": new Date(),
-      "sender": $('#sender').val(),
-      "replyto": $('#to').val(),
-    }
-    socket.emit('message', payload);
-    $('#myReply').val('');
-  });
-
   // Infinite scroll for messsages
   $('.main.product-container').infiniteScroll({
     // options
@@ -84,20 +47,16 @@ $(document).ready(function() {
     prefill: true,
   });
 
-  // Save message to user's personal list
-  $('#messages').on('click', ".save", function(e) {
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    let messageId = $(this).attr('data-id');
-    let payload = {
-      "messageId": messageId,
-      "user": $('#sender').val(),
-    }
-    console.log(payload);
-    socket.emit('save', payload);
+  $('.browse.product-container').infiniteScroll({
+    // options
+    path: 'browse?page={{#}}',
+    append: '.product-item',
+    history: false,
+    prefill: true,
   });
 
   // Autocomplete for form inputs
+  // autocomplete brand
   $(function() {
     $.ajax({
       type: "POST",
@@ -124,78 +83,19 @@ $(document).ready(function() {
     });
   });
 
-  // === MUURI
-  var itemContainers = [].slice.call(document.querySelectorAll('.board-column-content'));
-  var columnGrids = [];
-  var boardGrid;
-
-  // Define the column grids so we can drag those
-  // items around.
-  itemContainers.forEach(function (container) {
-
-    // Instantiate column grid.
-    var grid = new Muuri(container, {
-      items: '.board-item',
-      layoutDuration: 400,
-      layoutEasing: 'ease',
-      dragEnabled: true,
-      dragSort: function () {
-        return columnGrids;
-      },
-      dragSortInterval: 0,
-      dragContainer: document.body,
-      dragReleaseDuration: 400,
-      dragReleaseEasing: 'ease'
-    })
-    .on('dragStart', function (item) {
-      // Let's set fixed widht/height to the dragged item
-      // so that it does not stretch unwillingly when
-      // it's appended to the document body for the
-      // duration of the drag.
-      item.getElement().style.width = item.getWidth() + 'px';
-      item.getElement().style.height = item.getHeight() + 'px';
-    })
-    .on('dragReleaseEnd', function (item) {
-      // Let's remove the fixed width/height from the
-      // dragged item now that it is back in a grid
-      // column and can freely adjust to it's
-      // surroundings.
-      item.getElement().style.width = '';
-      item.getElement().style.height = '';
-      // Just in case, let's refresh the dimensions of all items
-      // in case dragging the item caused some other items to
-      // be different size.
-      columnGrids.forEach(function (grid) {
-        grid.refreshItems();
+  $(function() {
+    $.ajax({
+      type: "POST",
+      headers: {"Content-Type": "application/json"},
+      url: '/autocomplete_all',
+    }).done(function (data) {
+      $('#query').autocomplete({
+        source: data.matching_results,
+        minLength: 2,
+        max: 10
       });
-    })
-    .on('layoutStart', function () {
-      // Let's keep the board grid up to date with the
-      // dimensions changes of column grids.
-      boardGrid.refreshItems().layout();
     });
-
-    // Add the column grid reference to the column grids
-    // array, so we can access it later on.
-    columnGrids.push(grid);
-
   });
-
-  // === FORM VALIDATION ===
-  window.addEventListener('load', function() {
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
-        if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
 
   // === DataTables ===
   var table = $('#myShelf').DataTable({
@@ -314,6 +214,61 @@ $(document).ready(function() {
     })
   });
 
+  $('.recommend').on('click', function (e) {
+    e.preventDefault()
+    let category = $(this).data('category');
+
+    $.ajax({
+      url: '/recommend',
+      type: "POST",
+      dataType:'json',
+      contentType: "application/json",
+      headers: {"Content-Type": "application/json"},
+      data: JSON.stringify({
+        category: category,
+      }),
+      success: function (data) {
+        $('#exampleModalLongTitle').text("Top Picks for " + category)
+
+        let recHTML = '<ul id="products" class="browse product-container card-grid" style="justify-content:space-evenly;">'
+        let recs = data.recommendations
+        let empty = data.empty
+
+        if (empty) {
+          console.log(recs)
+          $(".modal-content .psa").html('<div class="row mt-3">Whoops - we don\'t have recommendations, but try some of these!</div>')
+
+          recs.forEach(function (prod) {
+            recHTML = recHTML +
+            '<li class="product-item">' +
+            '<div class="card modal-card">' +
+            '<a href="/product/' + prod.id + '">' +
+            '<img class="card-img-top" src="' + prod.imgsrc + '"></a>' +
+            '<div class="card-body"><p class="card-text">' + prod.brand + '</p>' +
+            '<h5 class="card-title"><a href="/product/' + prod.id + '">' + prod.name + '</a></h5><i style="color:#f5a800;" class="fas fa-star"></i><span class="mini">No Ratings</span>' + '</div></div></li>'
+          })
+          recHTML = recHTML + '</ul>'
+        } else {
+          recs.forEach(function (prod) {
+            recHTML = recHTML +
+            '<li class="product-item">' +
+            '<div class="card modal-card">' +
+            '<a href="/product/' + prod.id + '">' +
+            '<img class="card-img-top" src="' + prod.imgsrc + '"></a>' +
+            '<div class="card-body"><p class="card-text">' + prod.brand + '</p>' +
+            '<h5 class="card-title"><a href="/product/' + prod.id + '">' + prod.name + '</a></h5><i style="color:#f5a800;" class="fas fa-star"></i><span class="mini">' + prod.rating.toFixed(2) + '</span></div></div></li>'
+          })
+          recHTML = recHTML + '</ul>'
+        }
+
+        $("#exampleModalCenter .modal-body").html(recHTML)
+
+      }
+    }).done(function (data) {
+      console.log('Successfully recommended.')
+    })
+  })
+
   // editable
   $('#myShelf .editable').editable({
     type: 'text',
@@ -321,18 +276,4 @@ $(document).ready(function() {
     url: '/shelf/updateQty',
     title: 'Updating editable quantity',
   })
-
-  // Instantiate the board grid so we can drag those
-  // columns around.
-  boardGrid = new Muuri('.board', {
-    layoutDuration: 400,
-    layoutEasing: 'ease',
-    dragEnabled: true,
-    dragSortInterval: 0,
-    dragStartPredicate: {
-      handle: '.board-column-header'
-    },
-    dragReleaseDuration: 400,
-    dragReleaseEasing: 'ease'
-  });
 });

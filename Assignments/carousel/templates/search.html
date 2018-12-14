@@ -2,22 +2,23 @@
 {% block title %} Products {% endblock %}
 {% block body %}
   {% block content %}
-  <div class="header row">
-    <h2>Search Results: {{ search }}</h2>
-  </div>
+  <div class="container-fluid">
 
   <div class="jumbotron jumbotron-fluid jumbotron-psa">
+    <div class="header row">
+      <h4>YOUR SEARCH RESULTS FOR "{{ search }}"</h4>
+    </div>
     <div class="row">
       <p class="lead lead-inline">Can't find a product?</p>
-      <a class="btn btn-primary" href="/newProduct" role="button">Add a New Product</a>
+      <a class="btn btn-primary product-button-update" href="/newProduct" role="button">Add a New Product</a>
     </div>
   </div>
 
-  <div class="inner-container">
+  <div class="container-fluid w-100">
     <ul id="products" class="product-container card-grid">
       {% for product in products %}
         <li class="product-item">
-          <div class="card" style="width: 10rem;">
+          <div class="card" style="width: 13rem;">
             <a href="/product/{{ product.id }}"><img class="card-img-top" src="{{ product.imgsrc }}" alt="Card image cap"></a>
             <div class="card-body">
               <p class="card-text">{{ product.brand }}</p>
@@ -27,6 +28,8 @@
         </li>
         {% endfor %}
       </ul>
+  </div>
+
   </div>
   {% endblock %}
 {% endblock %}

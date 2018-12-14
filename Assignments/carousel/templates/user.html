@@ -3,16 +3,22 @@
 
 {% block body %}
   {% block content %}
-  <div class="header row">
-    <h2>Profile</h2>
+
+  <div class="container-fluid">
+    <div class="header row">
+      <h2>PROFILE</h2>
+    </div>
+
+    <div class="w-100 row">
+      <p>{{ user.username }}</p>
+    </div>
+
+    <div class="w-100 row">
+      <p>{{ user.email }}</p>
+    </div>
   </div>
 
-  <div class="container">
-
-    <h1>User: {{ user.username }}</h1>
-    <h2>Email: {{ user.email }}</h2>
-
-    <form method=post>
+    <!-- <form method=post>
       <div class="form-group row">
         <label for="skintype" class="col-sm-2 col-form-label">Skin Type</label>
         <div class="col-sm-10">
@@ -28,7 +34,6 @@
       </div>
 
       <button type="submit" class="btn btn-primary mb-2">Submit</button>
-    </form>
-  </div>
+    </form> -->
   {% endblock %}
 {% endblock %}

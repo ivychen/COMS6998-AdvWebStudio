@@ -7,12 +7,12 @@ $BEIGE: #e9ddce;
 $BLUE: #01b8fb;
 $BLUE-VERIFIED: #1dcaff;
 $BLUE-DARK: #0084b4;
-$BLUE-BABY: #c0deed;
+$BLUE-BABY: rgba(212, 230, 234, 0.71);
 $GREY: #657786;
 
 $PASTEL-BLUE: #f0f9fe;
 $GLAM-PINK: #eb0d8c;
-$DUST-ROSE: #edbeb8;
+$DUST-ROSE: rgba(249, 221, 218, 0.7);
 $MINT-GREEN: #b6efda;
 $STEEL: #5a5a5a;
 $CORAL: #f68f5b;
@@ -20,6 +20,7 @@ $DE-PALE-BLUE: #d6eff6;
 $DE-GREY: #666666;
 $MARIGOLD: #f5a800;
 $SLATE: rgb(82, 99, 132);
+$BLUSH: #f9ddda;
 
 .navbar-nav {
   width: 100%;
@@ -27,14 +28,19 @@ $SLATE: rgb(82, 99, 132);
   align-items: baseline;
   align-items: safe;
   justify-content: flex-end;
+
+  li {
+    white-space: nowrap;
+  }
 }
 
 .jumbotron {
-  background-color: #d4e6ea;
+  // background-color: $BLUE-BABY;
+  background-color: $DUST-ROSE;
 }
 
 nav.navbar.navbar-expand-sm {
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
   -webkit-box-shadow: 0px 0px 5px 3px rgba(212, 230, 234, 0.25);
   -moz-box-shadow: 0px 0px 5px 3px rgba(212, 230, 234, 0.25);
   box-shadow: 0px 0px 5px 3px rgba(212, 230, 234, 0.25);
@@ -43,16 +49,22 @@ nav.navbar.navbar-expand-sm {
     font-weight: bold;
     font-size: 1.5rem !important;
     height: 46px;
-    margin-left: 2rem;
-    border-bottom: 2px solid $BLUE;
+    margin-left: 1rem;
+    border-bottom: 2px solid $SLATE;
     margin-bottom: .5rem;
+    color: $SLATE !important;
+  }
+
+  .navbar-brand:hover {
+    border-bottom: 2px solid $CORAL;
+    transition: 0.4s;
   }
 
   .navbar-toggler {
-    border-color: $BLUE;
+    border-color: $CORAL;
 
     .navbar-toggler-icon {
-      color: $BLUE;
+      color: $CORAL;
       font-size: 1rem;
       line-height: 1.5rem;
       width: inherit;
@@ -63,7 +75,7 @@ nav.navbar.navbar-expand-sm {
   .dropdown-menu {
 
     .dropdown-divider {
-      border-top: 2px solid $BLUE
+      border-top: 2px solid $SLATE;
     }
 
     .btn {
@@ -72,7 +84,12 @@ nav.navbar.navbar-expand-sm {
   }
 
   a, li {
-    color: $BLUE !important;
+    color: $SLATE;
+  }
+
+  a:hover, li:hover {
+    color: $CORAL !important;
+    transition: .4s;
   }
 }
 
@@ -81,7 +98,7 @@ nav.navbar.navbar-expand-sm {
   align-items: center;
   font-weight: bold;
   justify-content: center;
-  background-color: $BLUE;
+  background-color: $SLATE;
   height: 32px;
   width: 32px;
   vertical-align: middle;
@@ -94,7 +111,8 @@ body > .container-fluid {
   margin-top: 0 !important;
 }
 
-body > .container-fluid {
+body > .container-fluid,
+footer > .container-fluid {
   color: $GRAPHITE;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -107,7 +125,7 @@ body > .container-fluid {
   .header.row {
     padding: .25rem 2rem .25rem 2rem;
     margin-bottom: 1rem;
-    background-color: $BLUE-BABY;
+    // background-color: $BLUE-BABY;
     color: $GRAPHITE;
   }
 
@@ -149,7 +167,8 @@ body > .container-fluid {
     display:  flex;
     justify-content: space-between;
     flex-wrap:  wrap;
-    padding: 0 2rem 0 2rem;
+    padding: 0;
+    align-items: baseline;
 
   .product-item {
     margin-right: 0;
@@ -160,7 +179,11 @@ body > .container-fluid {
       border: none;
       border-radius: .125rem;
       background-color: transparent;
-      width: 13rem !important ;
+      width: 13rem;
+
+      .card-title {
+        font-size: 1rem;
+      }
 
     }
   }
@@ -258,9 +281,35 @@ body > .container-fluid {
   }
 }
 
+.image {
+  text-align: center;
+
+  img {
+    width: 100%;
+    padding: 1rem;
+  }
+}
+
 .product {
+
+  .product-header {
+    background-color: $BLUSH;
+    padding: .5rem 1rem;
+  }
+
   display: inline-block;
   margin-bottom: 2rem;
+
+  .description {
+    background: #f3f3f3;
+    padding: 1.5rem;
+
+  }
+
+  .image {
+    text-align: center;
+    width: 100%;
+  }
   // background-color: white;
   // -webkit-box-shadow: 3px 3px 12px 0px rgba(255,255,255,1);
   // -moz-box-shadow: 3px 3px 12px 0px rgba(255,255,255,1);
@@ -303,15 +352,6 @@ body > .container-fluid {
     margin-bottom: 0 !important;
   }
 
-  .product-button-update {
-    color: white;
-    border-radius: 0;
-    margin-right: 1rem;
-    background-color: $BLUE;
-    border-color: $BLUE;
-    margin-bottom: 0 !important;
-  }
-
   #quantity {
     width: 3rem;
   }
@@ -321,11 +361,6 @@ body > .container-fluid {
     padding-left: 1rem;
     display: inline-block;
   }
-}
-
-.product-img {
-  max-width: 60%;
-  padding: 1rem;
 }
 
 .spacer {
@@ -353,9 +388,14 @@ body > .container-fluid {
 
 .form-search-bar {
   width: 45%;
+  margin-right: 1rem;
 
   .input-group {
     width: 100%;
+  }
+
+  .form-control {
+    font-size: .9rem;
   }
 }
 
@@ -438,16 +478,133 @@ h1 { font-size: 1.5em; margin: 10px; }
   width: 100%;
 }
 
-.dash-bin {
-  min-height: 200px;
-    border: dashed $BLUE;
-    min-width: 97%;
-    border-radius: 1rem;
-    padding: 0rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+table {
+  font-size: .9rem;
 }
 
 table.dataTable tbody th, table.dataTable tbody td {
   vertical-align: inherit;
+}
+
+.login, .register, .nav-link {
+  color: $SLATE;
+  font-size: .85rem;
+  text-transform: uppercase;
+  border: none;
+}
+
+a.dropdown-item {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+
+p.lead.lead-inline {
+  font-size: 1.25rem;
+}
+
+
+.product-heading.w-100.row {
+  display: flex;
+}
+
+.product-button-update {
+  color: white;
+  border-radius: 0;
+  margin-right: 1rem;
+  background-color: $BLUE;
+  border-color: $BLUE;
+  margin-bottom: 0 !important;
+}
+
+.container.h-100 {
+  padding: 0 0;
+}
+
+@media (min-width: 992px) {
+  .container.h-100 {
+    padding: 0 0;
+    max-width: 1024px;
+  }
+}
+
+.btn.btn-outline-success {
+  border-radius: 0;
+}
+
+.btn.btn-outline-success:hover,
+.btn.btn-outline-success:active
+.btn,
+a.nav-link {
+  color: $CORAL;
+  background: none;
+  border: none;
+  transition: 0.4s;
+}
+
+a {
+  color: $SLATE;
+}
+
+a:hover {
+  color: $CORAL;
+  transition: 0.4s;
+  text-decoration: none;
+}
+
+.recommend {
+  border-radius: 2rem;
+  padding: .25rem .8rem;
+  background-color: $BLUE;
+  color: white;
+}
+
+.card-body {
+  p.card-text {
+    text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+      max-width: 750px;
+      margin: 1.75rem auto;
+  }
+}
+
+.modal-card {
+  width: 12rem !important;
+}
+
+.mini-wrapper {
+  line-height: 2.5rem;
+
+  .tag {
+    margin-right: .5rem;
+  }
+}
+
+.mini {
+  font-size: 0.9rem;
+  margin-right: 1rem;
+}
+
+.category-widget {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.new-prod {
+  display: flex;
+  align-items: baseline;
+  .product-button-update {
+    font-size: 0.9rem;
+    background-color: transparent;
+    color: $BLUE;
+    &:hover {
+      color: $SLATE;
+      transition: 0.4s;
+    }
+  }
 }
